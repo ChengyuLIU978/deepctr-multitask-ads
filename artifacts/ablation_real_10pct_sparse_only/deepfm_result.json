@@ -1,0 +1,48 @@
+{
+  "model": "deepfm",
+  "library": "DeepCTR-Torch 0.3.0",
+  "trainable_parameters": 2977908,
+  "maximum_epochs": 10,
+  "epochs_ran": 3,
+  "best_epoch": 1,
+  "early_stopping": {
+    "monitor": "val_binary_crossentropy",
+    "patience": 2,
+    "min_delta": 0.0001,
+    "restored_best_weights": true
+  },
+  "batch_size": 2048,
+  "learning_rate": 0.001,
+  "capacity": "base",
+  "num_experts": null,
+  "elapsed_seconds": 48.90495930000179,
+  "history": {
+    "loss": [
+      0.6135110761550877,
+      0.5866252557645134,
+      0.5554484295120395
+    ],
+    "binary_crossentropy": [
+      0.6135077527671414,
+      0.5866192180835812,
+      0.5554311286193567
+    ],
+    "val_binary_crossentropy": [
+      0.6086663290641462,
+      0.6137214751574366,
+      0.6395149460669775
+    ]
+  },
+  "checkpoint": {
+    "filename": "deepfm_best.weights.pt",
+    "sha256": "a58e56723be19b6170e81cf69e383aa0379373deb96467a385ab172a4793d054",
+    "git_policy": "local artifact; ignored by git"
+  },
+  "test_metrics": {
+    "rows": 247018,
+    "ctr_auc": 0.6847200629434347,
+    "ctr_logloss": 0.6040980329977588,
+    "actual_ctr": 0.36520415516278165,
+    "predicted_ctr": 0.3670548146108012
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "run_id": "20261011T094235Z",
+  "created_at_utc": "2026-10-11T09:43:11.771946+00:00",
+  "status": "completed",
+  "data_mode": "real",
+  "feature_set": "all",
+  "models": [
+    "deepfm"
+  ],
+  "seed": 2026,
+  "device": "cpu",
+  "capacity": "base",
+  "num_experts": 3,
+  "maximum_epochs": 3,
+  "early_stopping_patience": 1,
+  "early_stopping_min_delta": 0.0001,
+  "output_dir": "artifacts\\feasibility_real_10pct_deepfm",
+  "results": {
+    "deepfm": {
+      "model": "deepfm",
+      "library": "DeepCTR-Torch 0.3.0",
+      "trainable_parameters": 2978168,
+      "maximum_epochs": 3,
+      "epochs_ran": 2,
+      "best_epoch": 1,
+      "early_stopping": {
+        "monitor": "val_binary_crossentropy",
+        "patience": 1,
+        "min_delta": 0.0001,
+        "restored_best_weights": true
+      },
+      "batch_size": 2048,
+      "learning_rate": 0.001,
+      "capacity": "base",
+      "num_experts": null,
+      "elapsed_seconds": 33.0689300999984,
+      "history": {
+        "loss": [
+          0.5712441029013693,
+          0.5422765100035009
+        ],
+        "binary_crossentropy": [
+          0.5712417041335083,
+          0.5422744525501166
+        ],
+        "val_binary_crossentropy": [
+          0.5617656983940702,
+          0.5640162269233364
+        ]
+      },
+      "checkpoint": {
+        "filename": "deepfm_best.weights.pt",
+        "sha256": "ab62aefb5ad8118f7bdd7269ec40cb5263e8da5824bf2e50262499f4fa30ad37",
+        "git_policy": "local artifact; ignored by git"
+      },
+      "test_metrics": {
+        "rows": 247018,
+        "ctr_auc": 0.7558240111731866,
+        "ctr_logloss": 0.5575265137535328,
+        "actual_ctr": 0.36520415516278165,
+        "predicted_ctr": 0.35979242174077664
+      }
+    }
+  },
+  "truthfulness_note": "Real Criteo sample experiment; scope and sample method are in data_manifest.json."
+}

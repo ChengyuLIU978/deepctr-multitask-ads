@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "deepctr-multitask-ads"
+version = "0.1.0"
+description = "Auditable CTR/CTCVR multitask learning project built on DeepCTR-Torch"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+  "deepctr-torch==0.3.0",
+  "numpy>=1.26,<3",
+  "pandas>=2.2,<3",
+  # DeepCTR-Torch imports requests in its version-check helper but 0.3.0 does
+  # not declare it in setup.py, so the application declares it explicitly.
+  "requests>=2.31,<3",
+  "scikit-learn>=1.5,<2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"
+

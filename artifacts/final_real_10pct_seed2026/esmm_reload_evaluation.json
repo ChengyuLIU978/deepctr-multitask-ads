@@ -1,0 +1,24 @@
+{
+  "model": "esmm",
+  "checkpoint": "artifacts/final_real_10pct_seed2026/esmm_best.weights.pt",
+  "verified_data_sha256": "0080fcbebdb6685d114077279fd45b8095310d019aabf92fdfbffa7fafedf1e1",
+  "metrics": {
+    "rows": 247018,
+    "ctr_auc": 0.7535410054327321,
+    "ctr_logloss": 0.5610048073408291,
+    "actual_ctr": 0.36520415516278165,
+    "predicted_ctr": 0.3691659605048573,
+    "ctcvr_auc": 0.8521270253114928,
+    "ctcvr_logloss": 0.151144700559321,
+    "actual_ctcvr": 0.049627962334728645,
+    "predicted_ctcvr": 0.048142705062882464,
+    "probability_order_violation_rate": 0.0,
+    "clicked_rows": 90212,
+    "cvr_auc_on_clicked": 0.8296169845983036,
+    "cvr_logloss_on_clicked": 0.3021942723824481,
+    "actual_cvr_on_clicked": 0.13589101228217976,
+    "predicted_cvr_on_clicked": 0.13298144082220878
+  },
+  "saved_metric_max_absolute_difference": 0.0,
+  "matches_saved_metrics": true
+}

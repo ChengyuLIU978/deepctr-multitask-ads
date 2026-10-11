@@ -1,0 +1,37 @@
+# Exact Windows CPU environment used for the verified 2026-10-11 experiments.
+# Install the project itself afterwards with: python -m pip install -e . --no-deps
+certifi==2026.7.22
+charset-normalizer==3.5.2
+cloudpickle==3.1.2
+colorama==0.4.6
+deepctr-torch==0.3.0
+filelock==4.1.0
+fsspec==2026.9.0
+idna==3.20
+iniconfig==2.3.1
+Jinja2==3.1.6
+joblib==1.6.0
+MarkupSafe==3.0.4
+mpmath==1.3.0
+narwhals==2.27.1
+networkx==3.7
+numpy==2.5.4
+packaging==26.3
+pandas==2.3.3
+pluggy==1.6.0
+Pygments==2.21.0
+pytest==9.1.1
+python-dateutil==2.9.0.post0
+pytz==2026.5
+requests==2.34.2
+scikit-learn==1.9.1
+scipy==1.18.1
+setuptools==84.0.0
+six==1.17.0
+sympy==1.14.0
+threadpoolctl==3.7.0
+torch==2.14.1
+tqdm==4.70.1
+typing_extensions==4.16.0
+tzdata==2026.5
+urllib3==2.8.0

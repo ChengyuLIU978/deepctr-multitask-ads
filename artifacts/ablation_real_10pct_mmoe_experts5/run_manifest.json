@@ -1,0 +1,79 @@
+{
+  "run_id": "20261011T094718Z",
+  "created_at_utc": "2026-10-11T09:48:16.284680+00:00",
+  "status": "completed",
+  "data_mode": "real",
+  "feature_set": "all",
+  "models": [
+    "mmoe"
+  ],
+  "seed": 2026,
+  "device": "cpu",
+  "capacity": "base",
+  "num_experts": 5,
+  "maximum_epochs": 10,
+  "early_stopping_patience": 2,
+  "early_stopping_min_delta": 0.0001,
+  "output_dir": "artifacts\\ablation_real_10pct_mmoe_experts5",
+  "results": {
+    "mmoe": {
+      "model": "mmoe",
+      "library": "DeepCTR-Torch 0.3.0",
+      "trainable_parameters": 2684474,
+      "maximum_epochs": 10,
+      "epochs_ran": 3,
+      "best_epoch": 1,
+      "early_stopping": {
+        "monitor": "val_binary_crossentropy",
+        "patience": 2,
+        "min_delta": 0.0001,
+        "restored_best_weights": true
+      },
+      "batch_size": 2048,
+      "learning_rate": 0.001,
+      "capacity": "base",
+      "num_experts": 5,
+      "elapsed_seconds": 54.66094769999836,
+      "history": {
+        "loss": [
+          0.8245973932287103,
+          0.6967469717775752,
+          0.6683871282300804
+        ],
+        "binary_crossentropy": [
+          0.41228972354917653,
+          0.34836856965356466,
+          0.33417935950883787
+        ],
+        "val_binary_crossentropy": [
+          0.3623645487690379,
+          0.3632820726216775,
+          0.3787101491048579
+        ]
+      },
+      "checkpoint": {
+        "filename": "mmoe_best.weights.pt",
+        "sha256": "824ffae21df8759436619e077b68f6865c1177417517b889ce5b0082f32eb7f9",
+        "git_policy": "local artifact; ignored by git"
+      },
+      "test_metrics": {
+        "rows": 247018,
+        "ctr_auc": 0.7483597987675941,
+        "ctr_logloss": 0.575610242328128,
+        "actual_ctr": 0.36520415516278165,
+        "predicted_ctr": 0.3596207094880478,
+        "ctcvr_auc": 0.8542664387250467,
+        "ctcvr_logloss": 0.15049475369183435,
+        "actual_ctcvr": 0.049627962334728645,
+        "predicted_ctcvr": 0.05143031394779148,
+        "probability_order_violation_rate": 0.0,
+        "clicked_rows": 90212,
+        "cvr_auc_on_clicked": 0.8216291919033704,
+        "cvr_logloss_on_clicked": 0.3116808810812156,
+        "actual_cvr_on_clicked": 0.13589101228217976,
+        "predicted_cvr_on_clicked": 0.16103047857903383
+      }
+    }
+  },
+  "truthfulness_note": "Real Criteo sample experiment; scope and sample method are in data_manifest.json."
+}

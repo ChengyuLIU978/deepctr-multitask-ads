@@ -1,0 +1,14 @@
+{
+  "model": "deepfm",
+  "checkpoint": "artifacts/final_real_10pct_seed2026/deepfm_best.weights.pt",
+  "verified_data_sha256": "0080fcbebdb6685d114077279fd45b8095310d019aabf92fdfbffa7fafedf1e1",
+  "metrics": {
+    "rows": 247018,
+    "ctr_auc": 0.7558240111731866,
+    "ctr_logloss": 0.5575265137535328,
+    "actual_ctr": 0.36520415516278165,
+    "predicted_ctr": 0.35979242174077664
+  },
+  "saved_metric_max_absolute_difference": 0.0,
+  "matches_saved_metrics": true
+}
