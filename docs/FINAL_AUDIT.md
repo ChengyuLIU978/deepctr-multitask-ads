@@ -16,14 +16,14 @@
 | 时间切分与预处理防泄露 | PASS | 70/15/15 时间边界；同 timestamp 不跨段；训练期 `fit`；泄露字段黑名单 |
 | 模型对照 | PASS | `artifacts/final_real_10pct_summary.json`；AUC、LogLoss、耗时、参数、seed 均记录 |
 | 指标可比性说明 | PASS | README 与实验日志明确 DeepFM 仅能比较 CTR；ESMM/MMoE 使用相同 CTR/CTCVR 任务 |
-| 负迁移研究 | PASS | SharedBottom 显著弱于 ESMM；MMoE 缓解硬共享干扰但未全面超过 ESMM；未越界声称梯度因果 |
+| 负迁移研究 | PASS | 本实验中 SharedBottom 的多项指标低于 ESMM；MMoE 相比 SharedBottom 的转化指标更高但未全面超过 ESMM；没有证明梯度冲突或统计显著性 |
 | 有意义的消融 | PASS | MMoE 2/3/5 experts、三种任务权重、完整/稀疏特征；均给研究问题、控制变量和三 seed 或明确单 seed 结果 |
 | 模型保存与加载 | PASS | 原三模型及 SharedBottom/MMoE 权重配置代表性 seed 2026 均重载复算，最大绝对差 0 |
 | 可复现与环境 | PASS | 固定 seeds、环境 JSON、数据/检查点 SHA256、PowerShell 脚本、多 seed 汇总校验 |
 | 工程测试 | PASS | 17 个 pytest 测试通过；CI 配置为 Windows/Python 3.12 |
 | 来源与许可证 | PASS | DeepCTR-Torch Apache-2.0；Criteo 页面标注 CC BY-NC-SA 4.0；第三方声明齐全 |
 | AI 辅助和原创边界 | PASS | `docs/AI_DISCLOSURE.md`、README、简历材料均明确说明 |
-| GitHub 安全 | PASS | 原始/处理数据、模型权重、环境文件和密钥模式已忽略；可提交 JSON 已移除本机绝对路径 |
+| GitHub 安全 | PASS（发布时静态检查范围） | 原始/处理数据、模型权重、环境文件和密钥模式已忽略；可提交 JSON 已移除本机绝对路径。Git 提交作者邮箱属于公开元数据，需要单独考虑隐私设置；此项并非完整历史密钥审计。 |
 | 求职材料与学习材料 | PASS | `docs/RESUME_PROJECT.md`；逐文件学习指南与 40 个追问 |
 
 ## 最终数字一致性审计
