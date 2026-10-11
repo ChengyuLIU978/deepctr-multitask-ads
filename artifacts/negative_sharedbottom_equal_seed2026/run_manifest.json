@@ -1,0 +1,141 @@
+{
+  "run_id": "20261011T104340Z",
+  "created_at_utc": "2026-10-11T10:44:53.627298+00:00",
+  "status": "completed",
+  "data_mode": "real",
+  "feature_set": "all",
+  "models": [
+    "sharedbottom"
+  ],
+  "seed": 2026,
+  "device": "cpu",
+  "capacity": "base",
+  "num_experts": 3,
+  "task_loss_weights": {
+    "ctr": 1.0,
+    "ctcvr": 1.0,
+    "normalization": "sum_to_two"
+  },
+  "maximum_epochs": 10,
+  "batch_size": 2048,
+  "learning_rate": 0.001,
+  "early_stopping_patience": 2,
+  "early_stopping_min_delta": 0.0001,
+  "output_dir": "artifacts/negative_sharedbottom_equal_seed2026",
+  "results": {
+    "sharedbottom": {
+      "model": "sharedbottom",
+      "library": "DeepCTR-Torch 0.3.0",
+      "trainable_parameters": 2649210,
+      "maximum_epochs": 10,
+      "epochs_ran": 4,
+      "best_epoch": 2,
+      "early_stopping": {
+        "monitor": "val_balanced_logloss",
+        "patience": 2,
+        "min_delta": 0.0001,
+        "restored_best_weights": true
+      },
+      "batch_size": 2048,
+      "learning_rate": 0.001,
+      "capacity": "base",
+      "num_experts": null,
+      "task_loss_weights": {
+        "ctr": 1.0,
+        "ctcvr": 1.0
+      },
+      "elapsed_seconds": 69.89090419999775,
+      "history": {
+        "loss": [
+          0.8244447146919185,
+          0.698646663403721,
+          0.6713635354633626,
+          0.6600368586205935
+        ],
+        "binary_crossentropy": [
+          0.4122094527977475,
+          0.34932145850233226,
+          0.3356716375957734,
+          0.3300073401223895
+        ],
+        "val_binary_crossentropy": [
+          0.370062140303489,
+          0.3600849806797589,
+          0.36845758622416924,
+          0.3704287945314462
+        ],
+        "val_ctr_auc": [
+          0.7304438346914536,
+          0.7459472503403229,
+          0.7361342236895345,
+          0.7335318700018434
+        ],
+        "val_ctr_logloss": [
+          0.5825167673018914,
+          0.568578656423791,
+          0.5806648292091647,
+          0.5811628268122466
+        ],
+        "val_ctcvr_auc": [
+          0.825236332611891,
+          0.8386276547823939,
+          0.8252946620349376,
+          0.820111938727227
+        ],
+        "val_ctcvr_logloss": [
+          0.15760751330508652,
+          0.15159130493572687,
+          0.1562503432391737,
+          0.1596947622506458
+        ],
+        "val_cvr_auc_on_clicked": [
+          0.7386118206257957,
+          0.8165328365061495,
+          0.8119580244724439,
+          0.8128254136488025
+        ],
+        "val_cvr_logloss_on_clicked": [
+          0.3480380276615808,
+          0.30041699915134196,
+          0.3055781854085308,
+          0.30938079855878226
+        ],
+        "val_probability_order_violation_rate": [
+          0.0,
+          0.0,
+          0.00027528581144541244,
+          0.00017002947177510768
+        ],
+        "val_balanced_logloss": [
+          0.37006214030348894,
+          0.3600849806797589,
+          0.36845758622416924,
+          0.3704287945314462
+        ]
+      },
+      "checkpoint": {
+        "filename": "sharedbottom_best.weights.pt",
+        "sha256": "b483d763a6200bce19a18539c3eed6c2885a895f3d1971b95f6aaefb358702d0",
+        "git_policy": "local artifact; ignored by git"
+      },
+      "test_metrics": {
+        "rows": 247018,
+        "ctr_auc": 0.7493421270081545,
+        "ctr_logloss": 0.5640522148093463,
+        "actual_ctr": 0.36520415516278165,
+        "predicted_ctr": 0.36542135514631235,
+        "ctcvr_auc": 0.8383260749754337,
+        "ctcvr_logloss": 0.15499761182237362,
+        "actual_ctcvr": 0.049627962334728645,
+        "predicted_ctcvr": 0.04813058530575582,
+        "probability_order_violation_rate": 0.0,
+        "clicked_rows": 90212,
+        "cvr_auc_on_clicked": 0.8135115800925292,
+        "cvr_logloss_on_clicked": 0.3094393993984793,
+        "actual_cvr_on_clicked": 0.13589101228217976,
+        "predicted_cvr_on_clicked": 0.13011576725268398
+      }
+    }
+  },
+  "truthfulness_note": "Real Criteo sample experiment; scope and sample method are in data_manifest.json."
+}

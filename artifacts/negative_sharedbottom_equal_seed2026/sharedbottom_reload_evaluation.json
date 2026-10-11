@@ -1,0 +1,24 @@
+{
+  "model": "sharedbottom",
+  "checkpoint": "artifacts/negative_sharedbottom_equal_seed2026/sharedbottom_best.weights.pt",
+  "verified_data_sha256": "0080fcbebdb6685d114077279fd45b8095310d019aabf92fdfbffa7fafedf1e1",
+  "metrics": {
+    "rows": 247018,
+    "ctr_auc": 0.7493421270081545,
+    "ctr_logloss": 0.5640522148093463,
+    "actual_ctr": 0.36520415516278165,
+    "predicted_ctr": 0.36542135514631235,
+    "ctcvr_auc": 0.8383260749754337,
+    "ctcvr_logloss": 0.15499761182237362,
+    "actual_ctcvr": 0.049627962334728645,
+    "predicted_ctcvr": 0.04813058530575582,
+    "probability_order_violation_rate": 0.0,
+    "clicked_rows": 90212,
+    "cvr_auc_on_clicked": 0.8135115800925292,
+    "cvr_logloss_on_clicked": 0.3094393993984793,
+    "actual_cvr_on_clicked": 0.13589101228217976,
+    "predicted_cvr_on_clicked": 0.13011576725268398
+  },
+  "saved_metric_max_absolute_difference": 0.0,
+  "matches_saved_metrics": true
+}

@@ -1,6 +1,6 @@
 # 源码学习与面试指南
 
-目标不是背诵文件，而是能从一条曝光讲到标签、切分、特征、三种模型、损失、指标和实验结论，并能明确哪些代码来自开源库。
+目标不是背诵文件，而是能从一条曝光讲到标签、切分、特征、四种模型、损失、指标和负迁移结论，并能明确哪些代码来自开源库。
 
 ## 一张执行地图
 
@@ -8,10 +8,11 @@
 官方 .tsv.gz
   -> prepare_criteo.py：分块读取、固定 seed 均匀采样、来源哈希
   -> data.py：校验标签、构造 ctcvr、时间切分、训练期拟合特征
-  -> models.py：用 DeepCTR-Torch 创建 DeepFM / ESMM / MMoE
-  -> train.py：early stopping、最佳检查点、测试评估、实验清单
+  -> models.py：用 DeepCTR-Torch 创建 DeepFM / ESMM / SharedBottom / MMoE
+  -> train.py：任务权重、逐任务诊断、early stopping、测试评估、实验清单
   -> evaluate.py：重建预处理和模型、重载权重、复算测试指标
   -> summarize.py：校验可比性、汇总多 seed 均值与样本标准差
+  -> analyze_negative_transfer.py：汇总配置差值与训练诊断
 ```
 
 ## 逐文件阅读
@@ -22,11 +23,12 @@
 | `src/ctr_cvr/data.py` | schema、标签合同、时间切分、特征拟合/变换、manifest 恢复 | `validate_and_label`、`temporal_split`、`FeaturePreprocessor` |
 | `src/ctr_cvr/models.py` | DeepCTR-Torch 的薄封装、容量和 expert 数配置 | `build_model`、`parameter_count` |
 | `src/ctr_cvr/metrics.py` | CTR、CTCVR 和 clicked-CVR 的统一评价 | `evaluate_ctr`、`evaluate_multitask` |
-| `src/ctr_cvr/train.py` | 数据指纹、训练、early stopping、最佳权重、结果落盘 | `set_seed`、`sha256_file`、`main` |
+| `src/ctr_cvr/train.py` | 数据指纹、任务损失权重、逐任务验证诊断、early stopping、最佳权重、结果落盘 | `parse_task_loss_weights`、`MultitaskValidationDiagnostics`、`main` |
 | `src/ctr_cvr/evaluate.py` | 从 manifest 恢复处理器与模型，重载检查点独立复算 | `main` |
 | `src/ctr_cvr/summarize.py` | 检查多 seed 可比条件并算均值/样本标准差 | `main` |
-| `tests/` | 标签、切分、未来数据隔离、序列化和模型容量不变量 | 四个 `test_*.py` |
-| `scripts/` | 安装、许可确认、下载、准备、主实验、消融、重载验证 | 按 README 顺序运行 |
+| `src/ctr_cvr/analyze_negative_transfer.py` | 聚合共享机制、expert、权重实验并生成可审计差值 | `metric_deltas`、`main` |
+| `tests/` | 标签、切分、未来数据隔离、序列化、模型容量、损失权重和回调状态不变量 | 六个 `test_*.py` |
+| `scripts/` | 安装、许可确认、下载、准备、主实验、负迁移消融、诊断、重载验证 | 按 README 顺序运行 |
 
 ## 关键函数逐层理解
 
@@ -63,9 +65,10 @@ ctcvr = click AND conversion
 
 - DeepFM：线性/FM 学低阶交互，DNN 学高阶组合，只输出 CTR。
 - ESMM：CTR tower 与 CVR tower；公开监督输出是 CTR 和两者乘积 CTCVR。
+- SharedBottom：CTR/CTCVR 完全共享一个底层表示，只在顶部使用任务头，是检查硬共享负迁移的简单基线。
 - MMoE：多个 expert、每任务 gate 和任务 tower；两个公开任务固定为 CTR/CTCVR。
 
-`small/base/large` 改隐藏层容量，`num_experts` 只影响 MMoE。测试会验证 expert 数增加时参数量确实增加。
+`small/base/large` 改隐藏层容量，`num_experts` 只影响 MMoE。测试会验证 MMoE expert 数增加时参数量上升，且 SharedBottom 参数量小于 MMoE。
 
 ### 6. `evaluate_multitask`
 
@@ -79,17 +82,21 @@ pCVR = clip(pCTCVR / max(pCTR, epsilon), epsilon, 1-epsilon)
 
 ### 7. `train.main`
 
-先固定 Python、NumPy、PyTorch seed 和线程数；真实数据先核验 SHA256。预处理只在训练段 `fit`。每个模型用验证集 BCE 做 Early Stopping 与 ModelCheckpoint，训练结束后明确从最佳 `.pt` 重载，再预测测试集。结果写入 data/environment/model/run 四类 JSON，并附检查点哈希。
+先固定 Python、NumPy、PyTorch seed 和线程数；真实数据先核验 SHA256。预处理只在训练段 `fit`。多任务损失权重会先归一到总和 2；逐 epoch 回调独立计算 CTR/CTCVR/clicked-CVR，并恢复模型训练状态，防止验证预测让后续 epoch 停留在 eval mode。多任务检查点统一监控两任务 LogLoss 的算术平均，训练结束后明确从最佳 `.pt` 重载，再预测测试集。结果写入 data/environment/model/run 四类 JSON，并附检查点哈希。
 
-本实验最大 10 epochs、patience 2；三模型在 3 个 seed 上都 best epoch=1，epoch 3 停止。这与“只设置 1 epoch”不同：后续 epoch 实际执行了，但验证目标未改善。
+本实验最大 10 epochs、patience 2；主对照三模型在 3 个 seed 上都 best epoch=1，epoch 3 停止。这与“只设置 1 epoch”不同：后续 epoch 实际执行了，但验证目标未改善。低学习率、长 patience 诊断把 ESMM/MMoE 最佳轮次推到 2，却没有改善测试指标。
 
 ### 8. `evaluate.main`
 
-它不是读取旧数字，而是：核对数据指纹和时间边界，从 `data_manifest.json` 恢复处理器，按 `run_manifest.json` 重建同一模型，加载最佳权重，再跑测试指标。seed 2026 三个模型的最大差异均为 0。
+它不是读取旧数字，而是：核对数据指纹和时间边界，从 `data_manifest.json` 恢复处理器，按 `run_manifest.json` 重建同一模型，加载最佳权重，再跑测试指标。主对照的 seed 2026 三模型，以及负迁移研究中的 SharedBottom 和 MMoE 权重配置，都用该路径验证。
 
 ### 9. `summarize.main`
 
-多 seed 求均值前，先要求同一准备数据 SHA256 和同一时间边界，并记录特征集、容量、最大 epoch 是否一致。标准差用 `ddof=1`，即样本标准差。它避免把不同数据或配置的运行偷偷混成误差条。
+多 seed 求均值前，要求同一准备数据 SHA256、时间边界、特征集、容量、expert 数、batch、学习率、损失权重和模型集合。标准差用 `ddof=1`，即样本标准差。它避免把不同数据或配置的运行偷偷混成误差条。
+
+### 10. `analyze_negative_transfer.main`
+
+它读取已经通过可比性检查的聚合 JSON，输出每个候选配置相对基线的“候选均值减基线均值”。AUC 差值越大越好、LogLoss 差值越小越好；脚本只做描述性比较，不自动把三个 seed 解释为统计显著。
 
 ## 读结果时的四条纪律
 
@@ -98,7 +105,7 @@ pCVR = clip(pCTCVR / max(pCTR, epsilon), epsilon, 1-epsilon)
 3. clicked-CVR 只在点击人群上计算，样本更少、方差通常更大。
 4. 三 seed 的小差异只能说“本实验观察到”，不能自动上升为统计显著或业务收益。
 
-## 30 个项目面试追问与参考答案
+## 40 个项目面试追问与参考答案
 
 ### 数据与标签
 
@@ -138,12 +145,22 @@ pCVR = clip(pCTCVR / max(pCTR, epsilon), epsilon, 1-epsilon)
 25. **MMoE 的 expert 和 gate 各做什么？** experts 学候选共享表示；每个任务的 gate 为 experts 分配不同权重，任务 tower 再输出概率。
 26. **为什么 MMoE 也训练 CTR/CTCVR？** 固定监督标签与样本空间，避免比较模型时同时改变任务定义。
 27. **expert 越多越好吗？** 本实验不是。5 experts 的 CTCVR 更好，但 CTR、clicked-CVR 和对应校准更差；3 experts 更均衡。
+28. **为什么加入 SharedBottom？** 它提供硬共享基线。如果 SharedBottom 明显弱而带 task gate 的 MMoE 恢复性能，可以把研究焦点放在共享方式，而不是只比较两个复杂模型。
+29. **SharedBottom 的结果说明什么？** 它在 CTR/CTCVR/CVR 三项 AUC 都低于 ESMM，尤其 CTCVR/CVR 低约 0.0155/0.0173；这与硬共享负迁移一致，但不单独证明具体梯度机制。
+30. **为什么 MMoE 没有全面超过 ESMM？** ESMM 直接编码 `P(CTCVR)=P(CTR)×P(CVR)`，归纳偏置与标签关系匹配；MMoE 独立头更灵活，但必须自行学共享程度，且 CTR/CTCVR 正例率差异较大。
 
 ### 评估与实验
 
-28. **AUC 提升而 LogLoss 变差怎么解释？** 排序更好但概率校准更差。若概率用于出价，应进一步看校准或做校准方法，不能只取 AUC。
-29. **DeepFM 与 ESMM/MMoE 能公平比较什么？** 只能公平比较 CTR AUC/LogLoss；DeepFM 没有 CTCVR/CVR 输出，其他指标不可比较。
-30. **你真正完成了什么，哪些不是原创？** 完成了数据源与许可核对、标签合同、时间切分、防泄露、统一训练/评价、三 seed、两类消融、记录、检查点重载、测试和文档。DeepFM/ESMM/MMoE 主体来自 DeepCTR-Torch；工程有 AI 辅助，不能声称从零手写或独立提出。
+31. **AUC 提升而 LogLoss 变差怎么解释？** 排序更好但概率质量更差。若概率用于出价，应进一步看校准，不能只取 AUC。
+32. **DeepFM 与多任务模型能公平比较什么？** 只能比较 CTR AUC/LogLoss；DeepFM 没有 CTCVR/CVR 输出，其他指标不可比较。
+33. **为什么把任务损失权重归一到总和 2？** 防止改变相对权重时同时改变总梯度尺度，让消融更接近只研究任务偏好。
+34. **权重消融发现了什么？** CTR-heavy 提升 CTR、损害 CTCVR/CVR；CTCVR-heavy 方向相反，形成 Pareto trade-off，没有全面最优权重。
+35. **为什么 early stopping 用平衡 LogLoss，不用加权训练 loss？** 固定选择标准能公平比较权重配置；否则每个配置连选模目标也改变，差异更难归因。业务真正有明确价值函数时可以替换该规则。
+36. **为什么模型都在第 1 epoch 最优？** 每轮已有 563 次更新，训练 loss 继续下降时验证 CTCVR LogLoss 已恶化。降低学习率、延长 patience 后多任务 best 移到第 2 轮但测试更差，说明不是明显误停。
+37. **验证回调为什么要恢复 train mode？** `predict` 会切到 eval mode；若不恢复，后续训练可能错误关闭 dropout/batch-normalization 行为。测试专门锁定该不变量。
+38. **三 seed 能否宣称显著提升？** 不能。它只能描述随机初始化波动；显著性还需要更多重复、配对检验或 bootstrap，并预先定义检验问题。
+39. **为什么不说已证明梯度冲突？** 项目没有计算任务梯度余弦、gate 熵或 expert 利用率；现有指标只能证明性能权衡与负迁移现象一致。
+40. **你真正完成了什么，哪些不是原创？** 完成数据/许可核对、标签与时间切分、防泄露、四模型公平对照、三 seed、共享/expert/权重/特征消融、逐 epoch 诊断、重载、测试和文档。模型主体来自 DeepCTR-Torch，工程有 AI 辅助，不能声称从零手写或独立提出。
 
 ## 建议集中学习顺序
 
@@ -151,7 +168,8 @@ pCVR = clip(pCTCVR / max(pCTR, epsilon), epsilon, 1-epsilon)
 2. 阅读 `data.py` 和对应测试，画出时间切分边界与 fit/transform 权限。
 3. 只跑 DeepFM，追踪输入字典、BCE、AUC/LogLoss 和最佳检查点。
 4. 读 ESMM 输出关系，验证每条样本 `pCTCVR<=pCTR`。
-5. 读 MMoE expert/gate/tower，解释为什么独立输出不保证包含关系。
-6. 对照主实验 JSON 与表格，亲自复算一个均值和样本标准差。
-7. 运行一次 `evaluate`，确认它真的从磁盘加载权重而不是复用内存模型。
-8. 不看答案口述上面 30 问；答不稳的部分再回源码定位。
+5. 对比 SharedBottom 与 MMoE 的共享路径，再解释为什么独立输出不保证包含关系。
+6. 画出三种损失权重的 Pareto 方向，说明为什么没有单一赢家。
+7. 对照主实验 JSON 与表格，亲自复算一个均值和样本标准差。
+8. 运行一次 `evaluate`，确认它真的从磁盘加载权重而不是复用内存模型。
+9. 不看答案口述上面 40 问；答不稳的部分再回源码定位。

@@ -1,0 +1,355 @@
+{
+  "run_id": "20261011T105846Z",
+  "created_at_utc": "2026-10-11T11:04:43.908759+00:00",
+  "status": "completed",
+  "data_mode": "real",
+  "feature_set": "all",
+  "models": [
+    "deepfm",
+    "esmm",
+    "mmoe"
+  ],
+  "seed": 2026,
+  "device": "cpu",
+  "capacity": "base",
+  "num_experts": 3,
+  "task_loss_weights": {
+    "ctr": 1.0,
+    "ctcvr": 1.0,
+    "normalization": "sum_to_two"
+  },
+  "maximum_epochs": 12,
+  "batch_size": 2048,
+  "learning_rate": 0.0003,
+  "early_stopping_patience": 4,
+  "early_stopping_min_delta": 0.0,
+  "output_dir": "artifacts/diagnostic_real_10pct_lr3e4_seed2026",
+  "results": {
+    "deepfm": {
+      "model": "deepfm",
+      "library": "DeepCTR-Torch 0.3.0",
+      "trainable_parameters": 2978168,
+      "maximum_epochs": 12,
+      "epochs_ran": 5,
+      "best_epoch": 1,
+      "early_stopping": {
+        "monitor": "val_binary_crossentropy",
+        "patience": 4,
+        "min_delta": 0.0,
+        "restored_best_weights": true
+      },
+      "batch_size": 2048,
+      "learning_rate": 0.0003,
+      "capacity": "base",
+      "num_experts": null,
+      "task_loss_weights": null,
+      "elapsed_seconds": 103.25134219999745,
+      "history": {
+        "loss": [
+          0.5951966927552039,
+          0.5445858875171106,
+          0.5269301791936123,
+          0.5185344159037862,
+          0.5143487484592185
+        ],
+        "binary_crossentropy": [
+          0.5951904209305675,
+          0.5445887847666258,
+          0.5269306440990481,
+          0.5185370122520266,
+          0.514343904160824
+        ],
+        "val_binary_crossentropy": [
+          0.5647794149520654,
+          0.5689788643502134,
+          0.5818742036857951,
+          0.589439559611838,
+          0.5938366018875454
+        ]
+      },
+      "checkpoint": {
+        "filename": "deepfm_best.weights.pt",
+        "sha256": "75b61dc54a490633a8929be9e804ce9be12159c1a547dbaf583d39c4e6952024",
+        "git_policy": "local artifact; ignored by git"
+      },
+      "test_metrics": {
+        "rows": 247018,
+        "ctr_auc": 0.7520746432534384,
+        "ctr_logloss": 0.5609023539262957,
+        "actual_ctr": 0.36520415516278165,
+        "predicted_ctr": 0.3698446626613049
+      }
+    },
+    "esmm": {
+      "model": "esmm",
+      "library": "DeepCTR-Torch 0.3.0",
+      "trainable_parameters": 2656217,
+      "maximum_epochs": 12,
+      "epochs_ran": 6,
+      "best_epoch": 2,
+      "early_stopping": {
+        "monitor": "val_balanced_logloss",
+        "patience": 4,
+        "min_delta": 0.0,
+        "restored_best_weights": true
+      },
+      "batch_size": 2048,
+      "learning_rate": 0.0003,
+      "capacity": "base",
+      "num_experts": null,
+      "task_loss_weights": {
+        "ctr": 1.0,
+        "ctcvr": 1.0
+      },
+      "elapsed_seconds": 120.12140269999873,
+      "history": {
+        "loss": [
+          0.8106211578393814,
+          0.7058809896420133,
+          0.6756720944365795,
+          0.6629003212595034,
+          0.6565825974115562,
+          0.6521627878471569
+        ],
+        "binary_crossentropy": [
+          0.40530049047125916,
+          0.35294063575219203,
+          0.3378344331484024,
+          0.33145367556647687,
+          0.3282875335316512,
+          0.3260783544263014
+        ],
+        "val_binary_crossentropy": [
+          0.36638462788432574,
+          0.3604552919750466,
+          0.3675058927931778,
+          0.3727611401130811,
+          0.3772215795185008,
+          0.3787126508645867
+        ],
+        "val_ctr_auc": [
+          0.7382548006964132,
+          0.7428222972628555,
+          0.7332274737668456,
+          0.7284322439623735,
+          0.7257346222893512,
+          0.7250984224201795
+        ],
+        "val_ctr_logloss": [
+          0.5820144316498598,
+          0.5709598423736617,
+          0.5809768239388651,
+          0.5878720738369719,
+          0.5932570921897974,
+          0.5948032835672156
+        ],
+        "val_ctcvr_auc": [
+          0.848490501112447,
+          0.8457776394488616,
+          0.8326084513655732,
+          0.8238916275330387,
+          0.8185418352050086,
+          0.8156797379727462
+        ],
+        "val_ctcvr_logloss": [
+          0.15075482411879168,
+          0.1499507415764315,
+          0.15403496164749048,
+          0.15765020638919025,
+          0.16118606684720413,
+          0.16262201816195793
+        ],
+        "val_cvr_auc_on_clicked": [
+          0.8157584209100368,
+          0.8234278092249974,
+          0.8175014265659654,
+          0.8117234630736863,
+          0.8085051814550158,
+          0.8076959340160004
+        ],
+        "val_cvr_logloss_on_clicked": [
+          0.3061071825596888,
+          0.29854237087303603,
+          0.3018808845836363,
+          0.3058185746454839,
+          0.31185209075865955,
+          0.313402545952254
+        ],
+        "val_probability_order_violation_rate": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "val_balanced_logloss": [
+          0.36638462788432574,
+          0.3604552919750466,
+          0.3675058927931778,
+          0.3727611401130811,
+          0.37722157951850077,
+          0.3787126508645867
+        ]
+      },
+      "checkpoint": {
+        "filename": "esmm_best.weights.pt",
+        "sha256": "cb7b860142607f1a9b409e0839b0ee65077f9d3b2792f814ed564404cc905340",
+        "git_policy": "local artifact; ignored by git"
+      },
+      "test_metrics": {
+        "rows": 247018,
+        "ctr_auc": 0.7460871682040617,
+        "ctr_logloss": 0.5672286760542194,
+        "actual_ctr": 0.36520415516278165,
+        "predicted_ctr": 0.37150907782358367,
+        "ctcvr_auc": 0.8445780458041271,
+        "ctcvr_logloss": 0.15358528483184708,
+        "actual_ctcvr": 0.049627962334728645,
+        "predicted_ctcvr": 0.04707476932273116,
+        "probability_order_violation_rate": 0.0,
+        "clicked_rows": 90212,
+        "cvr_auc_on_clicked": 0.8187831789313915,
+        "cvr_logloss_on_clicked": 0.3082385785148643,
+        "actual_cvr_on_clicked": 0.13589101228217976,
+        "predicted_cvr_on_clicked": 0.1272833778343916
+      }
+    },
+    "mmoe": {
+      "model": "mmoe",
+      "library": "DeepCTR-Torch 0.3.0",
+      "trainable_parameters": 2668346,
+      "maximum_epochs": 12,
+      "epochs_ran": 6,
+      "best_epoch": 2,
+      "early_stopping": {
+        "monitor": "val_balanced_logloss",
+        "patience": 4,
+        "min_delta": 0.0,
+        "restored_best_weights": true
+      },
+      "batch_size": 2048,
+      "learning_rate": 0.0003,
+      "capacity": "base",
+      "num_experts": 3,
+      "task_loss_weights": {
+        "ctr": 1.0,
+        "ctcvr": 1.0
+      },
+      "elapsed_seconds": 130.06066719999944,
+      "history": {
+        "loss": [
+          0.8884523845199349,
+          0.706998141487572,
+          0.6778252862221337,
+          0.663751714640018,
+          0.6569440390475833,
+          0.6524638781971971
+        ],
+        "binary_crossentropy": [
+          0.4442046279440495,
+          0.3535011406856092,
+          0.3389139588505364,
+          0.3318731555962584,
+          0.32847006268588713,
+          0.3262318735530084
+        ],
+        "val_binary_crossentropy": [
+          0.3662835862751307,
+          0.3606797235787742,
+          0.36746772502919905,
+          0.3727343766374179,
+          0.3765807954777942,
+          0.3792809974881862
+        ],
+        "val_ctr_auc": [
+          0.7324058739164647,
+          0.7422883999918624,
+          0.7342617564740545,
+          0.7291648254524936,
+          0.727565315530238,
+          0.7263360053436169
+        ],
+        "val_ctr_logloss": [
+          0.5844318903393625,
+          0.5718758774030047,
+          0.5801584027965089,
+          0.5867075319795922,
+          0.5916784073839821,
+          0.5936222945681013
+        ],
+        "val_ctcvr_auc": [
+          0.8519412979275021,
+          0.8477238524570512,
+          0.8317867261749398,
+          0.8228969117151592,
+          0.818690207780919,
+          0.8142610527673128
+        ],
+        "val_ctcvr_logloss": [
+          0.14813528221089892,
+          0.14948356975454372,
+          0.1547770472618893,
+          0.15876122129524342,
+          0.16148318357160632,
+          0.1649397004082712
+        ],
+        "val_cvr_auc_on_clicked": [
+          0.8170260618707076,
+          0.8258532362996521,
+          0.8153770975090593,
+          0.8105718028825268,
+          0.80903314609534,
+          0.8054360510282658
+        ],
+        "val_cvr_logloss_on_clicked": [
+          0.30564183648371196,
+          0.2951295708711362,
+          0.30432137950642485,
+          0.3103548511522758,
+          0.3162034170696297,
+          0.3251451421575671
+        ],
+        "val_probability_order_violation_rate": [
+          0.0,
+          0.0,
+          8.096641513100366e-06,
+          0.00048579849078602197,
+          0.001947242283900638,
+          0.0015140719629497684
+        ],
+        "val_balanced_logloss": [
+          0.3662835862751307,
+          0.3606797235787742,
+          0.3674677250291991,
+          0.3727343766374178,
+          0.3765807954777942,
+          0.3792809974881863
+        ]
+      },
+      "checkpoint": {
+        "filename": "mmoe_best.weights.pt",
+        "sha256": "f0625d56486188a9a661643d0e0f77d07e41c8c4bdffbf9be63bca99ce96a4a4",
+        "git_policy": "local artifact; ignored by git"
+      },
+      "test_metrics": {
+        "rows": 247018,
+        "ctr_auc": 0.7452476824995621,
+        "ctr_logloss": 0.5678216860292169,
+        "actual_ctr": 0.36520415516278165,
+        "predicted_ctr": 0.36491146045058437,
+        "ctcvr_auc": 0.846783828201228,
+        "ctcvr_logloss": 0.15323890880917948,
+        "actual_ctcvr": 0.049627962334728645,
+        "predicted_ctcvr": 0.04370250533357782,
+        "probability_order_violation_rate": 0.0,
+        "clicked_rows": 90212,
+        "cvr_auc_on_clicked": 0.8223907472940243,
+        "cvr_logloss_on_clicked": 0.30447543358777834,
+        "actual_cvr_on_clicked": 0.13589101228217976,
+        "predicted_cvr_on_clicked": 0.1248981575297521
+      }
+    }
+  },
+  "truthfulness_note": "Real Criteo sample experiment; scope and sample method are in data_manifest.json."
+}

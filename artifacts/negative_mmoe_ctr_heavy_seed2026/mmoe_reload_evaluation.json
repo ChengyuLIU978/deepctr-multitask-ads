@@ -1,0 +1,24 @@
+{
+  "model": "mmoe",
+  "checkpoint": "artifacts/negative_mmoe_ctr_heavy_seed2026/mmoe_best.weights.pt",
+  "verified_data_sha256": "0080fcbebdb6685d114077279fd45b8095310d019aabf92fdfbffa7fafedf1e1",
+  "metrics": {
+    "rows": 247018,
+    "ctr_auc": 0.7547338810517549,
+    "ctr_logloss": 0.5619681270956104,
+    "actual_ctr": 0.36520415516278165,
+    "predicted_ctr": 0.38428214904799163,
+    "ctcvr_auc": 0.8494013247453291,
+    "ctcvr_logloss": 0.15222227733405844,
+    "actual_ctcvr": 0.049627962334728645,
+    "predicted_ctcvr": 0.04798431621975646,
+    "probability_order_violation_rate": 0.0,
+    "clicked_rows": 90212,
+    "cvr_auc_on_clicked": 0.8226334510735236,
+    "cvr_logloss_on_clicked": 0.30700988344431357,
+    "actual_cvr_on_clicked": 0.13589101228217976,
+    "predicted_cvr_on_clicked": 0.1307600612766744
+  },
+  "saved_metric_max_absolute_difference": 0.0,
+  "matches_saved_metrics": true
+}

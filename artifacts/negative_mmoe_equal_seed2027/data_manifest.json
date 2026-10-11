@@ -1,0 +1,110 @@
+{
+  "source": {
+    "kind": "criteo_real",
+    "path": "data/processed/criteo_uniform_10pct.csv.gz",
+    "verified_prepared_sha256": "0080fcbebdb6685d114077279fd45b8095310d019aabf92fdfbffa7fafedf1e1",
+    "preparation_metadata": {
+      "source_url": "https://huggingface.co/datasets/criteo/criteo-attribution-dataset",
+      "source_path": "data\\raw\\criteo_attribution_dataset.tsv.gz",
+      "source_sha256": "94ac7a465564349bc7ba008602211d5990a3c53cc133abc0aadef61ea2391a98",
+      "source_rows": 16468027,
+      "source_clicks": 5947563,
+      "source_conversions": 806196,
+      "source_post_click_conversions": 806196,
+      "sample_rate": 0.1,
+      "seed": 2026,
+      "sampled_rows": 1646782,
+      "sampled_clicks": 594818,
+      "sampled_conversions": 80789,
+      "sampled_post_click_conversions": 80789,
+      "source_was_timestamp_sorted": true,
+      "prepared_sha256": "0080fcbebdb6685d114077279fd45b8095310d019aabf92fdfbffa7fafedf1e1",
+      "method": "single-pass uniform Bernoulli sample; no label-based oversampling"
+    }
+  },
+  "label_contract": {
+    "ctr": "click",
+    "ctcvr": "click AND conversion",
+    "cvr_evaluation_population": "rows with click == 1"
+  },
+  "split_method": "chronological 70/15/15; identical timestamps stay together",
+  "train_end_timestamp": 1847588,
+  "validation_end_timestamp": 2269235,
+  "partitions": {
+    "train": {
+      "rows": 1152748,
+      "start_timestamp": 16,
+      "end_timestamp": 1847588,
+      "clicks": 413534,
+      "raw_conversions": 56664,
+      "post_click_conversions": 56664,
+      "view_through_conversions_excluded": 0,
+      "ctr": 0.3587375558231287,
+      "ctcvr": 0.04915558300686707,
+      "cvr_on_clicked": 0.13702379973593465
+    },
+    "validation": {
+      "rows": 247016,
+      "start_timestamp": 1847589,
+      "end_timestamp": 2269235,
+      "clicks": 91072,
+      "raw_conversions": 11866,
+      "post_click_conversions": 11866,
+      "view_through_conversions_excluded": 0,
+      "ctr": 0.3686886679405383,
+      "ctcvr": 0.04803737409722447,
+      "cvr_on_clicked": 0.13029251581166548
+    },
+    "test": {
+      "rows": 247018,
+      "start_timestamp": 2269237,
+      "end_timestamp": 2671199,
+      "clicks": 90212,
+      "raw_conversions": 12259,
+      "post_click_conversions": 12259,
+      "view_through_conversions_excluded": 0,
+      "ctr": 0.36520415516278165,
+      "ctcvr": 0.049627962334728645,
+      "cvr_on_clicked": 0.13589101228217976
+    }
+  },
+  "preprocessor": {
+    "feature_set": "all",
+    "bucket_sizes": {
+      "uid": 100000,
+      "campaign": 50000,
+      "cat1": 20000,
+      "cat2": 20000,
+      "cat3": 20000,
+      "cat4": 20000,
+      "cat5": 20000,
+      "cat6": 20000,
+      "cat7": 20000,
+      "cat8": 20000,
+      "cat9": 20000
+    },
+    "embedding_dim": 8,
+    "origin_timestamp": 16,
+    "dense_means": {
+      "cost_log": 4.418322507769319,
+      "hour_sin": -0.21789253499041386,
+      "hour_cos": -0.23230418838810887,
+      "elapsed_days": 10.564064359917523
+    },
+    "dense_stds": {
+      "cost_log": 1.4976389930619622,
+      "hour_sin": 0.7014660112198801,
+      "hour_cos": 0.6375759110537854,
+      "elapsed_days": 6.133942731027197
+    },
+    "excluded_leakage_columns": [
+      "attribution",
+      "click_nb",
+      "click_pos",
+      "conversion_id",
+      "conversion_timestamp",
+      "cpo",
+      "time_since_last_click"
+    ]
+  }
+}

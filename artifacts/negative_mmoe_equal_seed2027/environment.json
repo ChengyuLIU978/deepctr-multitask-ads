@@ -1,0 +1,10 @@
+{
+  "python": "3.12.8 (tags/v3.12.8:2dc476b, Dec  3 2024, 19:30:04) [MSC v.1942 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "torch": "2.14.1+cpu",
+  "cuda_available": false,
+  "numpy": "2.5.4",
+  "pandas": "2.3.3",
+  "scikit_learn": "1.9.1",
+  "deepctr_torch": "0.3.0"
+}

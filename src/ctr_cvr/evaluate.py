@@ -19,7 +19,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-dir", type=Path, required=True)
     parser.add_argument("--data", type=Path, required=True)
-    parser.add_argument("--model", choices=("deepfm", "esmm", "mmoe"), required=True)
+    parser.add_argument(
+        "--model",
+        choices=("deepfm", "esmm", "sharedbottom", "mmoe"),
+        required=True,
+    )
     parser.add_argument("--batch-size", type=int, default=2048)
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
     return parser.parse_args()

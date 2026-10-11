@@ -10,12 +10,30 @@
     1847588,
     2269235
   ],
+  "experiment_configuration": {
+    "feature_set": "all",
+    "capacity": "base",
+    "num_experts": 3,
+    "maximum_epochs": 10,
+    "batch_size": 2048,
+    "learning_rate": 0.001,
+    "task_loss_weights": null
+  },
+  "models": [
+    "deepfm",
+    "esmm",
+    "mmoe"
+  ],
   "comparability_contract": {
     "same_data": true,
     "same_temporal_split": true,
     "same_feature_set": true,
     "same_capacity": true,
-    "same_maximum_epochs": true
+    "same_maximum_epochs": true,
+    "same_batch_size": true,
+    "same_learning_rate": true,
+    "same_num_experts": true,
+    "same_task_loss_weights": true
   },
   "aggregate": {
     "deepfm": {
@@ -66,7 +84,17 @@
         "mean": 49.4859421000001,
         "sample_std": 0.023317523350689748
       },
-      "trainable_parameters": 2978168
+      "trainable_parameters": 2978168,
+      "best_epochs": [
+        1,
+        1,
+        1
+      ],
+      "epochs_ran": [
+        3,
+        3,
+        3
+      ]
     },
     "esmm": {
       "metrics": {
@@ -197,7 +225,17 @@
         "mean": 45.76757946666597,
         "sample_std": 0.8028668314014988
       },
-      "trainable_parameters": 2656217
+      "trainable_parameters": 2656217,
+      "best_epochs": [
+        1,
+        1,
+        1
+      ],
+      "epochs_ran": [
+        3,
+        3,
+        3
+      ]
     },
     "mmoe": {
       "metrics": {
@@ -328,7 +366,17 @@
         "mean": 50.857068866667156,
         "sample_std": 2.883630655370515
       },
-      "trainable_parameters": 2668346
+      "trainable_parameters": 2668346,
+      "best_epochs": [
+        1,
+        1,
+        1
+      ],
+      "epochs_ran": [
+        3,
+        3,
+        3
+      ]
     }
   }
 }

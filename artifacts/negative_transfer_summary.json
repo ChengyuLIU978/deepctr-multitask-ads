@@ -1,0 +1,678 @@
+{
+  "study": "multitask negative transfer on the 10% real Criteo sample",
+  "prepared_data_sha256": "0080fcbebdb6685d114077279fd45b8095310d019aabf92fdfbffa7fafedf1e1",
+  "metric_delta_definition": "candidate mean minus baseline mean; no significance claim",
+  "configurations": {
+    "deepfm": {
+      "source": "artifacts/final_real_10pct_summary.json",
+      "model": "deepfm",
+      "run_count": 3,
+      "seeds": [
+        2026,
+        2027,
+        2028
+      ],
+      "prepared_data_sha256": "0080fcbebdb6685d114077279fd45b8095310d019aabf92fdfbffa7fafedf1e1",
+      "experiment_configuration": {
+        "feature_set": "all",
+        "capacity": "base",
+        "num_experts": 3,
+        "maximum_epochs": 10,
+        "batch_size": 2048,
+        "learning_rate": 0.001,
+        "task_loss_weights": null
+      },
+      "metrics": {
+        "ctr_auc": {
+          "mean": 0.7560230934621498,
+          "sample_std": 0.0001793026762582704
+        },
+        "ctr_logloss": {
+          "mean": 0.5592128903216811,
+          "sample_std": 0.001460521221456572
+        }
+      },
+      "elapsed_seconds": {
+        "values": [
+          49.48489400000108,
+          49.50976599999922,
+          49.46316630000001
+        ],
+        "mean": 49.4859421000001,
+        "sample_std": 0.023317523350689748
+      },
+      "trainable_parameters": 2978168,
+      "best_epochs": [
+        1,
+        1,
+        1
+      ],
+      "epochs_ran": [
+        3,
+        3,
+        3
+      ]
+    },
+    "esmm_equal": {
+      "source": "artifacts/final_real_10pct_summary.json",
+      "model": "esmm",
+      "run_count": 3,
+      "seeds": [
+        2026,
+        2027,
+        2028
+      ],
+      "prepared_data_sha256": "0080fcbebdb6685d114077279fd45b8095310d019aabf92fdfbffa7fafedf1e1",
+      "experiment_configuration": {
+        "feature_set": "all",
+        "capacity": "base",
+        "num_experts": 3,
+        "maximum_epochs": 10,
+        "batch_size": 2048,
+        "learning_rate": 0.001,
+        "task_loss_weights": null
+      },
+      "metrics": {
+        "ctr_auc": {
+          "mean": 0.7538118233884906,
+          "sample_std": 0.00023671172185002533
+        },
+        "ctr_logloss": {
+          "mean": 0.5612809099220949,
+          "sample_std": 0.0006441142522559825
+        },
+        "ctcvr_auc": {
+          "mean": 0.8523789990888532,
+          "sample_std": 0.00043031212209317874
+        },
+        "ctcvr_logloss": {
+          "mean": 0.15119390808846112,
+          "sample_std": 7.225000477901457e-05
+        },
+        "cvr_auc_on_clicked": {
+          "mean": 0.8283462647910764,
+          "sample_std": 0.0011865151448731369
+        },
+        "cvr_logloss_on_clicked": {
+          "mean": 0.303055257026381,
+          "sample_std": 0.0008043822785510614
+        }
+      },
+      "elapsed_seconds": {
+        "values": [
+          44.90459469999769,
+          45.905749300000025,
+          46.492394400000194
+        ],
+        "mean": 45.76757946666597,
+        "sample_std": 0.8028668314014988
+      },
+      "trainable_parameters": 2656217,
+      "best_epochs": [
+        1,
+        1,
+        1
+      ],
+      "epochs_ran": [
+        3,
+        3,
+        3
+      ]
+    },
+    "sharedbottom_equal": {
+      "source": "artifacts/negative_sharedbottom_equal_summary.json",
+      "model": "sharedbottom",
+      "run_count": 3,
+      "seeds": [
+        2026,
+        2027,
+        2028
+      ],
+      "prepared_data_sha256": "0080fcbebdb6685d114077279fd45b8095310d019aabf92fdfbffa7fafedf1e1",
+      "experiment_configuration": {
+        "feature_set": "all",
+        "capacity": "base",
+        "num_experts": 3,
+        "maximum_epochs": 10,
+        "batch_size": 2048,
+        "learning_rate": 0.001,
+        "task_loss_weights": {
+          "ctr": 1.0,
+          "ctcvr": 1.0,
+          "normalization": "sum_to_two"
+        }
+      },
+      "metrics": {
+        "ctr_auc": {
+          "mean": 0.7496750096801571,
+          "sample_std": 0.0005841513803325267
+        },
+        "ctr_logloss": {
+          "mean": 0.5643166523393405,
+          "sample_std": 0.0015239851259390574
+        },
+        "ctcvr_auc": {
+          "mean": 0.8369091541277459,
+          "sample_std": 0.0012736865184012093
+        },
+        "ctcvr_logloss": {
+          "mean": 0.15534667672284638,
+          "sample_std": 0.00031451293666755545
+        },
+        "cvr_auc_on_clicked": {
+          "mean": 0.8110241661561958,
+          "sample_std": 0.002157141901125696
+        },
+        "cvr_logloss_on_clicked": {
+          "mean": 0.3110316140321997,
+          "sample_std": 0.0014099099038662431
+        }
+      },
+      "elapsed_seconds": {
+        "values": [
+          69.89090419999775,
+          69.39334859999872,
+          70.52647599999909
+        ],
+        "mean": 69.93690959999851,
+        "sample_std": 0.5679628498236713
+      },
+      "trainable_parameters": 2649210,
+      "best_epochs": [
+        2,
+        2,
+        2
+      ],
+      "epochs_ran": [
+        4,
+        4,
+        4
+      ]
+    },
+    "mmoe_equal": {
+      "source": "artifacts/negative_mmoe_equal_summary.json",
+      "model": "mmoe",
+      "run_count": 3,
+      "seeds": [
+        2026,
+        2027,
+        2028
+      ],
+      "prepared_data_sha256": "0080fcbebdb6685d114077279fd45b8095310d019aabf92fdfbffa7fafedf1e1",
+      "experiment_configuration": {
+        "feature_set": "all",
+        "capacity": "base",
+        "num_experts": 3,
+        "maximum_epochs": 10,
+        "batch_size": 2048,
+        "learning_rate": 0.001,
+        "task_loss_weights": {
+          "ctr": 1.0,
+          "ctcvr": 1.0,
+          "normalization": "sum_to_two"
+        }
+      },
+      "metrics": {
+        "ctr_auc": {
+          "mean": 0.7509431690434333,
+          "sample_std": 0.0006675982096360883
+        },
+        "ctr_logloss": {
+          "mean": 0.5656145948129456,
+          "sample_std": 0.0009857800844226866
+        },
+        "ctcvr_auc": {
+          "mean": 0.8526492720217472,
+          "sample_std": 0.0002526247008981047
+        },
+        "ctcvr_logloss": {
+          "mean": 0.15114513555244954,
+          "sample_std": 0.00026830766618418374
+        },
+        "cvr_auc_on_clicked": {
+          "mean": 0.8246658239386409,
+          "sample_std": 0.0010931063404640042
+        },
+        "cvr_logloss_on_clicked": {
+          "mean": 0.30425789835346523,
+          "sample_std": 0.0010591966787521355
+        }
+      },
+      "elapsed_seconds": {
+        "values": [
+          63.08203349999894,
+          62.6654447999972,
+          63.38796399999774
+        ],
+        "mean": 63.045147433331294,
+        "sample_std": 0.3626691812492625
+      },
+      "trainable_parameters": 2668346,
+      "best_epochs": [
+        1,
+        1,
+        1
+      ],
+      "epochs_ran": [
+        3,
+        3,
+        3
+      ]
+    },
+    "mmoe_ctr_heavy": {
+      "source": "artifacts/negative_mmoe_ctr_heavy_summary.json",
+      "model": "mmoe",
+      "run_count": 3,
+      "seeds": [
+        2026,
+        2027,
+        2028
+      ],
+      "prepared_data_sha256": "0080fcbebdb6685d114077279fd45b8095310d019aabf92fdfbffa7fafedf1e1",
+      "experiment_configuration": {
+        "feature_set": "all",
+        "capacity": "base",
+        "num_experts": 3,
+        "maximum_epochs": 10,
+        "batch_size": 2048,
+        "learning_rate": 0.001,
+        "task_loss_weights": {
+          "ctr": 1.5,
+          "ctcvr": 0.5,
+          "normalization": "sum_to_two"
+        }
+      },
+      "metrics": {
+        "ctr_auc": {
+          "mean": 0.7543646685771073,
+          "sample_std": 0.0003448648447466416
+        },
+        "ctr_logloss": {
+          "mean": 0.5626397545626397,
+          "sample_std": 0.0009642310992967121
+        },
+        "ctcvr_auc": {
+          "mean": 0.8482023639357821,
+          "sample_std": 0.0013787784095779462
+        },
+        "ctcvr_logloss": {
+          "mean": 0.15308510777879752,
+          "sample_std": 0.001071361901660546
+        },
+        "cvr_auc_on_clicked": {
+          "mean": 0.8201622139708035,
+          "sample_std": 0.003720012759903892
+        },
+        "cvr_logloss_on_clicked": {
+          "mean": 0.3096096435964923,
+          "sample_std": 0.003371513485996049
+        }
+      },
+      "elapsed_seconds": {
+        "values": [
+          62.991894499999034,
+          62.22730230000161,
+          62.495767300002626
+        ],
+        "mean": 62.57165470000109,
+        "sample_std": 0.38790395871029754
+      },
+      "trainable_parameters": 2668346,
+      "best_epochs": [
+        1,
+        1,
+        1
+      ],
+      "epochs_ran": [
+        3,
+        3,
+        3
+      ]
+    },
+    "mmoe_ctcvr_heavy": {
+      "source": "artifacts/negative_mmoe_ctcvr_heavy_summary.json",
+      "model": "mmoe",
+      "run_count": 3,
+      "seeds": [
+        2026,
+        2027,
+        2028
+      ],
+      "prepared_data_sha256": "0080fcbebdb6685d114077279fd45b8095310d019aabf92fdfbffa7fafedf1e1",
+      "experiment_configuration": {
+        "feature_set": "all",
+        "capacity": "base",
+        "num_experts": 3,
+        "maximum_epochs": 10,
+        "batch_size": 2048,
+        "learning_rate": 0.001,
+        "task_loss_weights": {
+          "ctr": 0.5,
+          "ctcvr": 1.5,
+          "normalization": "sum_to_two"
+        }
+      },
+      "metrics": {
+        "ctr_auc": {
+          "mean": 0.7438721152715475,
+          "sample_std": 0.00031789637697309496
+        },
+        "ctr_logloss": {
+          "mean": 0.5721430551196999,
+          "sample_std": 0.0032805555176974093
+        },
+        "ctcvr_auc": {
+          "mean": 0.8578569763306577,
+          "sample_std": 0.0004003023428344419
+        },
+        "ctcvr_logloss": {
+          "mean": 0.14950404106372694,
+          "sample_std": 0.00016423506540785
+        },
+        "cvr_auc_on_clicked": {
+          "mean": 0.8318534394320006,
+          "sample_std": 0.002572596598254573
+        },
+        "cvr_logloss_on_clicked": {
+          "mean": 0.3000711825105851,
+          "sample_std": 0.0027387447184622853
+        }
+      },
+      "elapsed_seconds": {
+        "values": [
+          63.8201790000021,
+          67.9145595000009,
+          66.90069470000162
+        ],
+        "mean": 66.2118110666682,
+        "sample_std": 2.1323480989037886
+      },
+      "trainable_parameters": 2668346,
+      "best_epochs": [
+        1,
+        1,
+        1
+      ],
+      "epochs_ran": [
+        3,
+        3,
+        3
+      ]
+    },
+    "mmoe_experts2": {
+      "source": "artifacts/negative_mmoe_experts2_summary.json",
+      "model": "mmoe",
+      "run_count": 3,
+      "seeds": [
+        2026,
+        2027,
+        2028
+      ],
+      "prepared_data_sha256": "0080fcbebdb6685d114077279fd45b8095310d019aabf92fdfbffa7fafedf1e1",
+      "experiment_configuration": {
+        "feature_set": "all",
+        "capacity": "base",
+        "num_experts": 2,
+        "maximum_epochs": 10,
+        "batch_size": 2048,
+        "learning_rate": 0.001,
+        "task_loss_weights": {
+          "ctr": 1.0,
+          "ctcvr": 1.0,
+          "normalization": "sum_to_two"
+        }
+      },
+      "metrics": {
+        "ctr_auc": {
+          "mean": 0.7478679113222005,
+          "sample_std": 0.0005802551732744897
+        },
+        "ctr_logloss": {
+          "mean": 0.5660961082045938,
+          "sample_std": 0.0006537503940535107
+        },
+        "ctcvr_auc": {
+          "mean": 0.8520870080848422,
+          "sample_std": 0.0005624856533303581
+        },
+        "ctcvr_logloss": {
+          "mean": 0.15125758690490052,
+          "sample_std": 6.442393681945424e-05
+        },
+        "cvr_auc_on_clicked": {
+          "mean": 0.823289582356589,
+          "sample_std": 0.0012833037643305491
+        },
+        "cvr_logloss_on_clicked": {
+          "mean": 0.3032229047787587,
+          "sample_std": 0.0005807120552927704
+        }
+      },
+      "elapsed_seconds": {
+        "values": [
+          63.60064659999989,
+          63.29818019999948,
+          63.31843060000028
+        ],
+        "mean": 63.40575246666655,
+        "sample_std": 0.16908669989346709
+      },
+      "trainable_parameters": 2660282,
+      "best_epochs": [
+        1,
+        1,
+        1
+      ],
+      "epochs_ran": [
+        3,
+        3,
+        3
+      ]
+    },
+    "mmoe_experts5": {
+      "source": "artifacts/negative_mmoe_experts5_summary.json",
+      "model": "mmoe",
+      "run_count": 3,
+      "seeds": [
+        2026,
+        2027,
+        2028
+      ],
+      "prepared_data_sha256": "0080fcbebdb6685d114077279fd45b8095310d019aabf92fdfbffa7fafedf1e1",
+      "experiment_configuration": {
+        "feature_set": "all",
+        "capacity": "base",
+        "num_experts": 5,
+        "maximum_epochs": 10,
+        "batch_size": 2048,
+        "learning_rate": 0.001,
+        "task_loss_weights": {
+          "ctr": 1.0,
+          "ctcvr": 1.0,
+          "normalization": "sum_to_two"
+        }
+      },
+      "metrics": {
+        "ctr_auc": {
+          "mean": 0.7506621484003221,
+          "sample_std": 0.0020278905385847823
+        },
+        "ctr_logloss": {
+          "mean": 0.5673938807162892,
+          "sample_std": 0.007311993876622758
+        },
+        "ctcvr_auc": {
+          "mean": 0.8534082659533473,
+          "sample_std": 0.0008040637985721
+        },
+        "ctcvr_logloss": {
+          "mean": 0.15083955022575654,
+          "sample_std": 0.00030472233341575236
+        },
+        "cvr_auc_on_clicked": {
+          "mean": 0.8243354125393824,
+          "sample_std": 0.0024335758501396244
+        },
+        "cvr_logloss_on_clicked": {
+          "mean": 0.3064744226512842,
+          "sample_std": 0.004516688758181151
+        }
+      },
+      "elapsed_seconds": {
+        "values": [
+          75.58044939999672,
+          76.32060940000156,
+          75.17599429999973
+        ],
+        "mean": 75.69235103333267,
+        "sample_std": 0.5804544886944097
+      },
+      "trainable_parameters": 2684474,
+      "best_epochs": [
+        1,
+        1,
+        1
+      ],
+      "epochs_ran": [
+        3,
+        3,
+        3
+      ]
+    }
+  },
+  "deltas": {
+    "sharedbottom_vs_esmm": {
+      "ctcvr_auc": -0.01546984496110726,
+      "ctcvr_logloss": 0.004152768634385268,
+      "ctr_auc": -0.00413681370833352,
+      "ctr_logloss": 0.0030357424172455794,
+      "cvr_auc_on_clicked": -0.017322098634880656,
+      "cvr_logloss_on_clicked": 0.007976357005818724
+    },
+    "mmoe_equal_vs_esmm": {
+      "ctcvr_auc": 0.00027027293289405563,
+      "ctcvr_logloss": -4.8772536011570944e-05,
+      "ctr_auc": -0.002868654345057342,
+      "ctr_logloss": 0.004333684890850731,
+      "cvr_auc_on_clicked": -0.0036804408524355736,
+      "cvr_logloss_on_clicked": 0.0012026413270842529
+    },
+    "mmoe_ctr_heavy_vs_equal": {
+      "ctcvr_auc": -0.004446908085965151,
+      "ctcvr_logloss": 0.0019399722263479802,
+      "ctr_auc": 0.0034214995336739884,
+      "ctr_logloss": -0.0029748402503059213,
+      "cvr_auc_on_clicked": -0.004503609967837385,
+      "cvr_logloss_on_clicked": 0.005351745243027062
+    },
+    "mmoe_ctcvr_heavy_vs_equal": {
+      "ctcvr_auc": 0.005207704308910488,
+      "ctcvr_logloss": -0.0016410944887225998,
+      "ctr_auc": -0.007071053771885771,
+      "ctr_logloss": 0.006528460306754247,
+      "cvr_auc_on_clicked": 0.007187615493359778,
+      "cvr_logloss_on_clicked": -0.0041867158428801066
+    },
+    "mmoe_experts2_vs_experts3": {
+      "ctcvr_auc": -0.0005622639369050608,
+      "ctcvr_logloss": 0.00011245135245097071,
+      "ctr_auc": -0.003075257721232738,
+      "ctr_logloss": 0.0004815133916481473,
+      "cvr_auc_on_clicked": -0.0013762415820518514,
+      "cvr_logloss_on_clicked": -0.0010349935747065442
+    },
+    "mmoe_experts5_vs_experts3": {
+      "ctcvr_auc": 0.0007589939316000605,
+      "ctcvr_logloss": -0.0003055853266930031,
+      "ctr_auc": -0.0002810206431111961,
+      "ctr_logloss": 0.0017792859033435304,
+      "cvr_auc_on_clicked": -0.00033041139925849006,
+      "cvr_logloss_on_clicked": 0.002216524297818989
+    }
+  },
+  "training_diagnostic": {
+    "default_learning_rate": {
+      "learning_rate": 0.001,
+      "maximum_epochs": 10,
+      "patience": 2,
+      "mmoe_best_epoch": 1,
+      "mmoe_epochs_ran": 3,
+      "mmoe_test_metrics": {
+        "rows": 247018,
+        "ctr_auc": 0.7517140147858479,
+        "ctr_logloss": 0.5650591380789303,
+        "actual_ctr": 0.36520415516278165,
+        "predicted_ctr": 0.3905460406710473,
+        "ctcvr_auc": 0.8523590045482375,
+        "ctcvr_logloss": 0.1512939060458761,
+        "actual_ctcvr": 0.049627962334728645,
+        "predicted_ctcvr": 0.049329781618277835,
+        "probability_order_violation_rate": 0.0,
+        "clicked_rows": 90212,
+        "cvr_auc_on_clicked": 0.8236197136601667,
+        "cvr_logloss_on_clicked": 0.3052419748301518,
+        "actual_cvr_on_clicked": 0.13589101228217976,
+        "predicted_cvr_on_clicked": 0.13364904065978342
+      }
+    },
+    "lower_learning_rate": {
+      "learning_rate": 0.0003,
+      "maximum_epochs": 12,
+      "patience": 4,
+      "best_epochs": {
+        "deepfm": 1,
+        "esmm": 2,
+        "mmoe": 2
+      },
+      "epochs_ran": {
+        "deepfm": 5,
+        "esmm": 6,
+        "mmoe": 6
+      },
+      "test_metrics": {
+        "deepfm": {
+          "rows": 247018,
+          "ctr_auc": 0.7520746432534384,
+          "ctr_logloss": 0.5609023539262957,
+          "actual_ctr": 0.36520415516278165,
+          "predicted_ctr": 0.3698446626613049
+        },
+        "esmm": {
+          "rows": 247018,
+          "ctr_auc": 0.7460871682040617,
+          "ctr_logloss": 0.5672286760542194,
+          "actual_ctr": 0.36520415516278165,
+          "predicted_ctr": 0.37150907782358367,
+          "ctcvr_auc": 0.8445780458041271,
+          "ctcvr_logloss": 0.15358528483184708,
+          "actual_ctcvr": 0.049627962334728645,
+          "predicted_ctcvr": 0.04707476932273116,
+          "probability_order_violation_rate": 0.0,
+          "clicked_rows": 90212,
+          "cvr_auc_on_clicked": 0.8187831789313915,
+          "cvr_logloss_on_clicked": 0.3082385785148643,
+          "actual_cvr_on_clicked": 0.13589101228217976,
+          "predicted_cvr_on_clicked": 0.1272833778343916
+        },
+        "mmoe": {
+          "rows": 247018,
+          "ctr_auc": 0.7452476824995621,
+          "ctr_logloss": 0.5678216860292169,
+          "actual_ctr": 0.36520415516278165,
+          "predicted_ctr": 0.36491146045058437,
+          "ctcvr_auc": 0.846783828201228,
+          "ctcvr_logloss": 0.15323890880917948,
+          "actual_ctcvr": 0.049627962334728645,
+          "predicted_ctcvr": 0.04370250533357782,
+          "probability_order_violation_rate": 0.0,
+          "clicked_rows": 90212,
+          "cvr_auc_on_clicked": 0.8223907472940243,
+          "cvr_logloss_on_clicked": 0.30447543358777834,
+          "actual_cvr_on_clicked": 0.13589101228217976,
+          "predicted_cvr_on_clicked": 0.1248981575297521
+        }
+      }
+    }
+  },
+  "guardrail": "Three seeds describe observed variability but do not establish statistical significance or online business impact."
+}

@@ -1,0 +1,141 @@
+{
+  "run_id": "20261011T104456Z",
+  "created_at_utc": "2026-10-11T10:46:09.126697+00:00",
+  "status": "completed",
+  "data_mode": "real",
+  "feature_set": "all",
+  "models": [
+    "sharedbottom"
+  ],
+  "seed": 2027,
+  "device": "cpu",
+  "capacity": "base",
+  "num_experts": 3,
+  "task_loss_weights": {
+    "ctr": 1.0,
+    "ctcvr": 1.0,
+    "normalization": "sum_to_two"
+  },
+  "maximum_epochs": 10,
+  "batch_size": 2048,
+  "learning_rate": 0.001,
+  "early_stopping_patience": 2,
+  "early_stopping_min_delta": 0.0001,
+  "output_dir": "artifacts/negative_sharedbottom_equal_seed2027",
+  "results": {
+    "sharedbottom": {
+      "model": "sharedbottom",
+      "library": "DeepCTR-Torch 0.3.0",
+      "trainable_parameters": 2649210,
+      "maximum_epochs": 10,
+      "epochs_ran": 4,
+      "best_epoch": 2,
+      "early_stopping": {
+        "monitor": "val_balanced_logloss",
+        "patience": 2,
+        "min_delta": 0.0001,
+        "restored_best_weights": true
+      },
+      "batch_size": 2048,
+      "learning_rate": 0.001,
+      "capacity": "base",
+      "num_experts": null,
+      "task_loss_weights": {
+        "ctr": 1.0,
+        "ctcvr": 1.0
+      },
+      "elapsed_seconds": 69.39334859999872,
+      "history": {
+        "loss": [
+          0.8228928639645561,
+          0.7053863529944112,
+          0.6718565948041251,
+          0.6598923261667785
+        ],
+        "binary_crossentropy": [
+          0.4114375902129832,
+          0.35268846147606264,
+          0.33591610904362246,
+          0.32993341972265544
+        ],
+        "val_binary_crossentropy": [
+          0.3739289955288211,
+          0.3605644967601399,
+          0.36620997366192815,
+          0.371073828030619
+        ],
+        "val_ctr_auc": [
+          0.7253038048237915,
+          0.7457466556333862,
+          0.7387086701587253,
+          0.7356803820399482
+        ],
+        "val_ctr_logloss": [
+          0.590567848844531,
+          0.5691988583143277,
+          0.5753793716012984,
+          0.5807652991674073
+        ],
+        "val_ctcvr_auc": [
+          0.8302535392469435,
+          0.8367692297850484,
+          0.8254147169439275,
+          0.819136243513622
+        ],
+        "val_ctcvr_logloss": [
+          0.15729014221311136,
+          0.15193013520595208,
+          0.15704057572255792,
+          0.1613823568938308
+        ],
+        "val_cvr_auc_on_clicked": [
+          0.7478937034467903,
+          0.8133526558398697,
+          0.808836562226125,
+          0.8097557682508589
+        ],
+        "val_cvr_logloss_on_clicked": [
+          0.35296433656573184,
+          0.3026220174901447,
+          0.30843312057294675,
+          0.31349996283020104
+        ],
+        "val_probability_order_violation_rate": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "val_balanced_logloss": [
+          0.37392899552882114,
+          0.3605644967601399,
+          0.36620997366192815,
+          0.37107382803061906
+        ]
+      },
+      "checkpoint": {
+        "filename": "sharedbottom_best.weights.pt",
+        "sha256": "c5cd673d6d75556de1267365803a991e7033a556a38ec154f6322d5d6d16161e",
+        "git_policy": "local artifact; ignored by git"
+      },
+      "test_metrics": {
+        "rows": 247018,
+        "ctr_auc": 0.7493333912951071,
+        "ctr_logloss": 0.5659555513154744,
+        "actual_ctr": 0.36520415516278165,
+        "predicted_ctr": 0.39718994850920536,
+        "ctcvr_auc": 0.8358593305091989,
+        "ctcvr_logloss": 0.15560800582494622,
+        "actual_ctcvr": 0.049627962334728645,
+        "predicted_ctcvr": 0.04949209380174384,
+        "probability_order_violation_rate": 0.0,
+        "clicked_rows": 90212,
+        "cvr_auc_on_clicked": 0.8096671449630045,
+        "cvr_logloss_on_clicked": 0.31212180527780325,
+        "actual_cvr_on_clicked": 0.13589101228217976,
+        "predicted_cvr_on_clicked": 0.12825314037508925
+      }
+    }
+  },
+  "truthfulness_note": "Real Criteo sample experiment; scope and sample method are in data_manifest.json."
+}

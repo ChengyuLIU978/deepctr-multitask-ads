@@ -5,7 +5,7 @@
 - Project: <https://github.com/shenweichen/DeepCTR-Torch>
 - Version used: `0.3.0`
 - License: Apache License 2.0
-- Use: installed dependency providing DeepFM, ESMM, MMoE, feature columns, and training utilities.
+- Use: installed dependency providing DeepFM, ESMM, SharedBottom, MMoE, feature columns, and training utilities.
 
 No DeepCTR-Torch source file is vendored into this repository. The original copyright and license remain with its authors.
 

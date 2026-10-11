@@ -1,4 +1,4 @@
-"""Train DeepFM, ESMM, and MMoE with one auditable data/metric contract."""
+"""Train CTR/CTCVR baselines with one auditable data and metric contract."""
 
 from __future__ import annotations
 
@@ -18,6 +18,7 @@ import numpy as np
 import pandas as pd
 import sklearn
 import torch
+import torch.nn.functional as torch_functional
 
 from .data import (
     FeaturePreprocessor,
@@ -53,6 +54,19 @@ def parse_models(value: str) -> list[str]:
     return models
 
 
+def parse_task_loss_weights(value: str) -> tuple[float, float]:
+    """Parse and normalize CTR/CTCVR loss weights to a constant total of two."""
+
+    try:
+        weights = tuple(float(item.strip()) for item in value.split(","))
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("task loss weights must be two positive numbers") from exc
+    if len(weights) != 2 or any(weight <= 0 for weight in weights):
+        raise argparse.ArgumentTypeError("task loss weights must be two positive numbers")
+    scale = 2.0 / sum(weights)
+    return weights[0] * scale, weights[1] * scale
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data-mode", choices=("demo", "real"), default="demo")
@@ -68,6 +82,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--embedding-dim", type=int, default=8)
     parser.add_argument("--num-experts", type=int, default=3)
     parser.add_argument("--capacity", choices=SUPPORTED_CAPACITIES, default="base")
+    parser.add_argument(
+        "--task-loss-weights",
+        type=parse_task_loss_weights,
+        default=(1.0, 1.0),
+        metavar="CTR,CTCVR",
+        help="positive multitask loss weights; normalized internally to sum to 2",
+    )
     parser.add_argument("--seed", type=int, default=2026)
     parser.add_argument("--threads", type=int, default=min(4, os.cpu_count() or 1))
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
@@ -132,6 +153,72 @@ def environment_manifest() -> dict[str, object]:
         "scikit_learn": sklearn.__version__,
         "deepctr_torch": getattr(deepctr_torch, "__version__", "unknown"),
     }
+
+
+def weighted_binary_cross_entropy(weight: float):
+    """Create a DeepCTR-compatible BCE callable with a fixed task weight."""
+
+    def loss(input_tensor, target_tensor, reduction="mean"):
+        return weight * torch_functional.binary_cross_entropy(
+            input_tensor,
+            target_tensor,
+            reduction=reduction,
+        )
+
+    return loss
+
+
+class MultitaskValidationDiagnostics:
+    """Add per-task validation metrics before checkpoint/early-stop callbacks run."""
+
+    def __init__(self, validation_x, validation_frame: pd.DataFrame, batch_size: int) -> None:
+        self.model = None
+        self.validation_x = validation_x
+        self.validation_frame = validation_frame
+        self.batch_size = batch_size
+
+    def set_model(self, model) -> None:
+        self.model = model
+
+    def set_params(self, params) -> None:
+        del params
+
+    def on_train_begin(self, logs=None) -> None:
+        del logs
+
+    def on_train_end(self, logs=None) -> None:
+        del logs
+
+    def on_epoch_begin(self, epoch, logs=None) -> None:
+        del epoch, logs
+
+    def on_epoch_end(self, epoch, logs=None) -> None:
+        del epoch
+        if self.model is None or logs is None:
+            return
+        was_training = bool(self.model.training)
+        predictions = self.model.predict(self.validation_x, batch_size=self.batch_size)
+        if was_training:
+            self.model.train()
+        metrics = evaluate_multitask(
+            self.validation_frame["click"].to_numpy(),
+            self.validation_frame["ctcvr"].to_numpy(),
+            predictions[:, 0],
+            predictions[:, 1],
+        )
+        for name in (
+            "ctr_auc",
+            "ctr_logloss",
+            "ctcvr_auc",
+            "ctcvr_logloss",
+            "cvr_auc_on_clicked",
+            "cvr_logloss_on_clicked",
+            "probability_order_violation_rate",
+        ):
+            logs[f"val_{name}"] = metrics[name]
+        logs["val_balanced_logloss"] = 0.5 * (
+            float(metrics["ctr_logloss"]) + float(metrics["ctcvr_logloss"])
+        )
 
 
 def main() -> None:
@@ -234,12 +321,21 @@ def main() -> None:
                 loss=["binary_crossentropy", "binary_crossentropy"],
                 metrics=["binary_crossentropy"],
             )
+            model.loss_func = [
+                weighted_binary_cross_entropy(args.task_loss_weights[0]),
+                weighted_binary_cross_entropy(args.task_loss_weights[1]),
+            ]
             train_y = labels(split.train, ["click", "ctcvr"])
             validation_y = labels(split.validation, ["click", "ctcvr"])
 
         checkpoint_path = output_dir / f"{model_name}_best.weights.pt"
-        monitor = "val_binary_crossentropy"
-        callbacks = [
+        monitor = "val_binary_crossentropy" if model_name == "deepfm" else "val_balanced_logloss"
+        callbacks = []
+        if model_name != "deepfm":
+            callbacks.append(
+                MultitaskValidationDiagnostics(validation_x, split.validation, args.batch_size)
+            )
+        callbacks.extend([
             ModelCheckpoint(
                 filepath=str(checkpoint_path),
                 monitor=monitor,
@@ -256,7 +352,7 @@ def main() -> None:
                 mode="min",
                 restore_best_weights=True,
             ),
-        ]
+        ])
         started = time.perf_counter()
         history = model.fit(
             train_x,
@@ -305,6 +401,11 @@ def main() -> None:
             "learning_rate": args.learning_rate,
             "capacity": args.capacity,
             "num_experts": args.num_experts if model_name == "mmoe" else None,
+            "task_loss_weights": (
+                {"ctr": args.task_loss_weights[0], "ctcvr": args.task_loss_weights[1]}
+                if model_name != "deepfm"
+                else None
+            ),
             "elapsed_seconds": elapsed_seconds,
             "history": history.history,
             "checkpoint": {
@@ -332,7 +433,14 @@ def main() -> None:
         "device": device,
         "capacity": args.capacity,
         "num_experts": args.num_experts,
+        "task_loss_weights": {
+            "ctr": args.task_loss_weights[0],
+            "ctcvr": args.task_loss_weights[1],
+            "normalization": "sum_to_two",
+        },
         "maximum_epochs": args.epochs,
+        "batch_size": args.batch_size,
+        "learning_rate": args.learning_rate,
         "early_stopping_patience": args.patience,
         "early_stopping_min_delta": args.min_delta,
         "output_dir": manifest_path(output_dir),

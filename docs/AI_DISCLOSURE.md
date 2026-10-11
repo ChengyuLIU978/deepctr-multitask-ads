@@ -2,7 +2,7 @@
 
 ## 第三方成熟实现
 
-DeepFM、ESMM、MMoE 的网络主体由 `deepctr-torch==0.3.0` 提供。该项目为 Apache-2.0 开源软件。本仓库只配置特征列、网络尺寸、优化器与任务，不声称重新发明或从零手写这些模型。
+DeepFM、ESMM、SharedBottom、MMoE 的网络主体由 `deepctr-torch==0.3.0` 提供。该项目为 Apache-2.0 开源软件。本仓库只配置特征列、网络尺寸、优化器、任务损失与实验流程，不声称重新发明或从零手写这些模型。
 
 ## AI 辅助完成的工作
 
@@ -18,7 +18,7 @@ DeepFM、ESMM、MMoE 的网络主体由 `deepctr-torch==0.3.0` 提供。该项�
 
 可说：
 
-> 基于 DeepCTR-Torch 搭建广告 CTR/CTCVR 多任务实验，完成 Criteo 数据适配、时间切分、防泄露、统一指标与 DeepFM/ESMM/MMoE 对比，并保留可复现实验记录；开发中使用 AI 辅助。
+> 基于 DeepCTR-Torch 搭建广告 CTR/CTCVR 多任务实验，完成 Criteo 数据适配、时间切分、防泄露、统一指标，以及 DeepFM/ESMM/SharedBottom/MMoE 与负迁移消融，并保留可复现实验记录；开发中使用 AI 辅助。
 
 不可说：
 

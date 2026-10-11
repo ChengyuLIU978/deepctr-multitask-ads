@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Sequence
 
 
-SUPPORTED_MODELS = ("deepfm", "esmm", "mmoe")
+SUPPORTED_MODELS = ("deepfm", "esmm", "sharedbottom", "mmoe")
 SUPPORTED_CAPACITIES = ("small", "base", "large")
 
 CAPACITY_UNITS = {
@@ -41,7 +41,7 @@ def build_model(
     num_experts: int = 3,
     capacity: str = "base",
 ):
-    """Build one of the three deliberately small interview-project models."""
+    """Build one of the four deliberately small interview-project models."""
 
     name = name.lower()
     if capacity not in SUPPORTED_CAPACITIES:
@@ -67,6 +67,19 @@ def build_model(
         return ESMM(
             dnn_feature_columns=feature_columns,
             tower_dnn_hidden_units=units["esmm"],
+            dnn_dropout=0.1,
+            task_types=("binary", "binary"),
+            task_names=("ctr", "ctcvr"),
+            seed=seed,
+            device=device,
+        )
+    if name == "sharedbottom":
+        from deepctr_torch.models.multitask import SharedBottom
+
+        return SharedBottom(
+            dnn_feature_columns=feature_columns,
+            bottom_dnn_hidden_units=units["expert"],
+            tower_dnn_hidden_units=units["tower"],
             dnn_dropout=0.1,
             task_types=("binary", "binary"),
             task_names=("ctr", "ctcvr"),

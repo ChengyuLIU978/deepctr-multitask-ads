@@ -11,10 +11,10 @@
 - 切分：按时间 70/15/15；训练 1,152,748、验证 247,016、测试 247,018；时间边界 1,847,588 / 2,269,235。
 - 测试基准率：CTR 0.365204、CTCVR 0.049628；90,212 条点击曝光上的 CVR 0.135891。
 - 训练：batch size 2048、learning rate 0.001、base capacity、最多 10 epochs、Early Stopping patience 2、min_delta 1e-4、保存最佳验证 BCE。
-- 随机种子：2026、2027、2028。三个模型在三个 seed 中均为 best epoch=1、epochs ran=3。
+- 随机种子：2026、2027、2028。主对照的 DeepFM、ESMM、MMoE 在三个 seed 中均为 best epoch=1、epochs ran=3。
 - 计时：包含单模型训练、最佳权重重载和测试预测；不含数据下载、准备与前处理。
 
-DeepCTR-Torch 对双任务模型将验证 BCE 汇总为统一的 `val_binary_crossentropy`；本项目用它做 early stopping。测试集从不参与停止或选参。
+多任务模型使用 `val_balanced_logloss=(CTR LogLoss+CTCVR LogLoss)/2` 做 early stopping；等权时与原先两任务验证 BCE 的均值是同一目标。任务损失权重归一化到总和 2。测试集从不参与停止或选参。
 
 ## 主实验：三模型 × 三 seed
 
@@ -56,19 +56,45 @@ DeepCTR-Torch 对双任务模型将验证 BCE 汇总为统一的 `val_binary_cro
 
 先只训练 DeepFM 检查 10% 数据的内存与耗时：最多 3 epochs、patience 1，在第 2 epoch 停止，best epoch=1，CTR AUC 0.755824、LogLoss 0.557527、约 33 秒。该结果只用于确定主实验预算，证据在 `artifacts/feasibility_real_10pct_deepfm/`。
 
-## 消融一：MMoE expert 数量
+## 负迁移对照：共享机制
 
-研究问题：在其他条件相同的情况下，expert 从 2 增到 3 或 5 是否同时改善任务？控制数据、切分、完整特征、base 容量、seed 2026、batch、学习率和 early stopping。
+研究问题：强制共享、任务选择性共享和显式概率链在相同 CTR/CTCVR 监督下有何差异？控制同一数据、切分、完整特征、base 容量、batch、学习率、最大轮数和三个 seeds。
+
+| 模型 | 参数量 | CTR AUC / LL | CTCVR AUC / LL | CVR AUC / LL | 最佳/运行轮数 |
+|---|---:|---|---|---|---|
+| ESMM | 2,656,217 | 0.7538±0.0002 / 0.5613±0.0006 | 0.8524±0.0004 / 0.1512±0.0001 | **0.8283±0.0012** / **0.3031±0.0008** | 1 / 3 |
+| SharedBottom | 2,649,210 | 0.7497±0.0006 / 0.5643±0.0015 | 0.8369±0.0013 / 0.1553±0.0003 | 0.8110±0.0022 / 0.3110±0.0014 | 2 / 4 |
+| MMoE-3 | 2,668,346 | 0.7509±0.0007 / 0.5656±0.0010 | **0.8526±0.0003** / **0.1511±0.0003** | 0.8247±0.0011 / 0.3043±0.0011 | 1 / 3 |
+
+SharedBottom 相对 ESMM 的 CTR/CTCVR/CVR AUC 分别为 -0.00414/-0.01547/-0.01732，三个 LogLoss 也都更差；MMoE 相比硬共享恢复了大部分转化性能。MMoE 相对 ESMM 的 CTCVR AUC 只有 +0.00027，同时 CTR/CVR AUC -0.00287/-0.00368。结果支持“任务共享方式会造成权衡”，但未测梯度余弦，不能写成已经证明某层梯度冲突。证据：`artifacts/negative_sharedbottom_equal_summary.json`、`negative_mmoe_equal_summary.json`。
+
+新负迁移管线每轮多做一次逐任务验证预测，因此其耗时不能与没有这一步的旧 ESMM 主实验直接比较；每次真实耗时均保留在 JSON，同一新管线内的 expert/权重耗时口径一致。
+
+## 消融一：MMoE expert 数量（三 seeds）
+
+研究问题：在其他条件相同的情况下，expert 从 2 增到 3 或 5 是否同时改善任务？控制数据、切分、完整特征、base 容量、三个 seeds、batch、学习率、损失权重和 early stopping。
 
 | Experts | 参数量 | CTR AUC / LL | CTCVR AUC / LL | CVR AUC / LL | 秒 |
 |---:|---:|---:|---:|---:|---:|
-| 2 | 2,660,282 | 0.747457 / 0.566253 | 0.851961 / 0.151298 | 0.822504 / 0.303448 | 46.74 |
-| 3 | 2,668,346 | **0.751714** / **0.565059** | 0.852359 / 0.151294 | **0.823620** / **0.305242** | 54.17 |
-| 5 | 2,684,474 | 0.748360 / 0.575610 | **0.854266** / **0.150495** | 0.821629 / 0.311681 | 54.66 |
+| 2 | 2,660,282 | 0.7479±0.0006 / 0.5661±0.0007 | 0.8521±0.0006 / 0.1513±0.0001 | 0.8233±0.0013 / **0.3032±0.0006** | 63.41±0.17 |
+| 3 | 2,668,346 | **0.7509±0.0007** / **0.5656±0.0010** | 0.8526±0.0003 / 0.1511±0.0003 | **0.8247±0.0011** / 0.3043±0.0011 | 63.05±0.36 |
+| 5 | 2,684,474 | 0.7507±0.0020 / 0.5674±0.0073 | **0.8534±0.0008** / **0.1508±0.0003** | 0.8243±0.0024 / 0.3065±0.0045 | 75.69±0.58 |
 
-5 experts 提高 CTCVR，却降低 CTR 和 clicked-CVR，并让相应 logloss 变差；不存在“expert 越多越好”。默认 3 experts 是任务折中，不是所有单项最优。证据在 `artifacts/ablation_real_10pct_mmoe_experts2/`、`experts5/`；3 experts 复用 seed 2026 主实验。
+5 experts 略微提高 CTCVR，却让 CTR/CVR LogLoss 更差、跨 seed 方差增大，训练耗时约增加 20%；不存在“expert 越多越好”。默认 3 experts 是任务折中，不是所有单项最优。证据在 `artifacts/negative_mmoe_experts{2,5}_summary.json` 和 `negative_mmoe_equal_summary.json`。
 
-## 消融二：连续特征组
+## 消融二：MMoE 任务损失权重（三 seeds）
+
+研究问题：固定 3 experts 和总损失尺度后，改变 CTR/CTCVR 相对权重能否全面提升？
+
+| CTR:CTCVR | CTR AUC / LL | CTCVR AUC / LL | CVR AUC / LL | 秒 |
+|---|---|---|---|---:|
+| 1.5:0.5 | **0.7544±0.0003 / 0.5626±0.0010** | 0.8482±0.0014 / 0.1531±0.0011 | 0.8202±0.0037 / 0.3096±0.0034 | 62.57±0.39 |
+| 1.0:1.0 | 0.7509±0.0007 / 0.5656±0.0010 | 0.8526±0.0003 / 0.1511±0.0003 | 0.8247±0.0011 / 0.3043±0.0011 | 63.05±0.36 |
+| 0.5:1.5 | 0.7439±0.0003 / 0.5721±0.0033 | **0.8579±0.0004 / 0.1495±0.0002** | **0.8319±0.0026 / 0.3001±0.0027** | 66.21±2.13 |
+
+相对等权，CTR-heavy 的 CTR AUC +0.00342、CTCVR/CVR AUC -0.00445/-0.00450；CTCVR-heavy 的 CTCVR/CVR AUC +0.00521/+0.00719、CTR AUC -0.00707。三个 seed 都体现方向一致的 Pareto trade-off；没有一个权重全面占优，也没有统计显著性声明。证据：三个 `artifacts/negative_mmoe_*_summary.json`。
+
+## 消融三：连续特征组
 
 研究问题：去掉 `cost_log`、hour sin/cos 和 elapsed days，仅保留匿名离散特征后会怎样？控制数据、切分、seed 2026、模型容量和训练预算。
 
@@ -83,9 +109,15 @@ DeepCTR-Torch 对双任务模型将验证 BCE 汇总为统一的 `val_binary_cro
 
 完整特征对 CTR/CTCVR 的贡献明显；clicked-CVR 提升相对较小。证据在 `artifacts/ablation_real_10pct_sparse_only/`。
 
+## 第 1 epoch 最优诊断
+
+默认每个 epoch 有 563 次更新。等权 MMoE seed 2026 的训练 loss 从 0.7898 降到 0.6882、0.6601，但验证平衡 LogLoss 从 0.3572 升到 0.3595、0.3685；第 2 epoch 的 CTR LL 略好，CTCVR LL 已从 0.1477 恶化到 0.1530。最佳 epoch=1 是综合验证目标的实际选择，不是只训练了一轮。
+
+额外把学习率降为 3e-4、patience 增为 4、`min_delta=0`、最多 12 epochs：DeepFM 仍 best=1/ran=5；ESMM 与 MMoE 均 best=2/ran=6，但三者测试指标都比默认 seed 2026 更差。该诊断排除了 patience/min_delta 明显过早截断；更合理的解释是单轮已有 563 次更新，后续对较早时间段过拟合。证据：`artifacts/diagnostic_real_10pct_lr3e4_seed2026/`。完整分析见 `docs/NEGATIVE_TRANSFER_STUDY.md`。
+
 ## 模型保存/加载验证
 
-seed 2026 的 DeepFM、ESMM、MMoE 最佳 `.pt` 权重分别从磁盘重建模型并加载，再对同一测试集评估。三者所有保存指标的最大绝对差均为 0，`matches_saved_metrics=true`。重载前会检查准备数据 SHA256 和时间边界；证据为对应运行目录中的 `*_reload_evaluation.json`。
+seed 2026 的 DeepFM、ESMM、MMoE 最佳 `.pt` 权重分别从磁盘重建模型并加载，再对同一测试集评估。三者所有保存指标的最大绝对差均为 0，`matches_saved_metrics=true`。负迁移研究还重载验证了 SharedBottom 以及 MMoE 等权/两种权重配置的 seed 2026 检查点。重载前会检查准备数据 SHA256 和时间边界；证据为对应运行目录中的 `*_reload_evaluation.json`。
 
 ## 历史冒烟实验（不用于简历数字）
 
@@ -94,6 +126,6 @@ seed 2026 的 DeepFM、ESMM、MMoE 最佳 `.pt` 权重分别从磁盘重建模�
 ## 未完成与边界
 
 - 未在 16,468,027 行全量数据上训练。当前实现为内存式 pandas + DeepCTR-Torch 输入字典；在 16 GB RAM 且实验时可用内存约 2.5 GB 的机器上，全量会有明显 OOM 风险。为保证三 seed、三模型和消融完整可审计，选择 10% 安全规模。
-- 未做 GPU 训练、超参数大搜索、bootstrap 置信区间、概率校准曲线、线上 A/B 或收益指标。
+- 未做 GPU 训练、超参数大搜索、bootstrap 置信区间、梯度余弦/gate 熵/expert 利用率、概率校准曲线、线上 A/B 或收益指标。
 - 耗时是这台 CPU 机器的工程记录，不应外推为模型普遍速度。
 - Criteo 数据靠近观察窗末尾的曝光可能有转化截尾；匿名字段也限制业务解释。

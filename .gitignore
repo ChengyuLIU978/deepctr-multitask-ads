@@ -18,6 +18,11 @@ artifacts/*
 !artifacts/final_*_summary.json
 !artifacts/ablation_*/
 !artifacts/ablation_*/*.json
+!artifacts/negative_*/
+!artifacts/negative_*/*.json
+!artifacts/negative_*_summary.json
+!artifacts/diagnostic_real_*/
+!artifacts/diagnostic_real_*/*.json
 *.pt
 *.pth
 *.ckpt

@@ -1,0 +1,183 @@
+{
+  "run_count": 3,
+  "seeds": [
+    2026,
+    2027,
+    2028
+  ],
+  "prepared_data_sha256": "0080fcbebdb6685d114077279fd45b8095310d019aabf92fdfbffa7fafedf1e1",
+  "temporal_split_boundaries": [
+    1847588,
+    2269235
+  ],
+  "experiment_configuration": {
+    "feature_set": "all",
+    "capacity": "base",
+    "num_experts": 3,
+    "maximum_epochs": 10,
+    "batch_size": 2048,
+    "learning_rate": 0.001,
+    "task_loss_weights": {
+      "ctr": 1.5,
+      "ctcvr": 0.5,
+      "normalization": "sum_to_two"
+    }
+  },
+  "models": [
+    "mmoe"
+  ],
+  "comparability_contract": {
+    "same_data": true,
+    "same_temporal_split": true,
+    "same_feature_set": true,
+    "same_capacity": true,
+    "same_maximum_epochs": true,
+    "same_batch_size": true,
+    "same_learning_rate": true,
+    "same_num_experts": true,
+    "same_task_loss_weights": true
+  },
+  "aggregate": {
+    "mmoe": {
+      "metrics": {
+        "actual_ctcvr": {
+          "values": [
+            0.049627962334728645,
+            0.049627962334728645,
+            0.049627962334728645
+          ],
+          "mean": 0.04962796233472864,
+          "sample_std": 8.498374721940739e-18
+        },
+        "actual_ctr": {
+          "values": [
+            0.36520415516278165,
+            0.36520415516278165,
+            0.36520415516278165
+          ],
+          "mean": 0.36520415516278165,
+          "sample_std": 0.0
+        },
+        "actual_cvr_on_clicked": {
+          "values": [
+            0.13589101228217976,
+            0.13589101228217976,
+            0.13589101228217976
+          ],
+          "mean": 0.13589101228217976,
+          "sample_std": 0.0
+        },
+        "ctcvr_auc": {
+          "values": [
+            0.8494013247453291,
+            0.848510021687849,
+            0.846695745374168
+          ],
+          "mean": 0.8482023639357821,
+          "sample_std": 0.0013787784095779462
+        },
+        "ctcvr_logloss": {
+          "values": [
+            0.15222227733405844,
+            0.152748760640763,
+            0.15428428536157113
+          ],
+          "mean": 0.15308510777879752,
+          "sample_std": 0.001071361901660546
+        },
+        "ctr_auc": {
+          "values": [
+            0.7547338810517549,
+            0.7540508595048085,
+            0.7543092651747582
+          ],
+          "mean": 0.7543646685771073,
+          "sample_std": 0.0003448648447466416
+        },
+        "ctr_logloss": {
+          "values": [
+            0.5619681270956104,
+            0.5622065240698578,
+            0.5637446125224507
+          ],
+          "mean": 0.5626397545626397,
+          "sample_std": 0.0009642310992967121
+        },
+        "cvr_auc_on_clicked": {
+          "values": [
+            0.8226334510735236,
+            0.821969330261728,
+            0.8158838605771589
+          ],
+          "mean": 0.8201622139708035,
+          "sample_std": 0.003720012759903892
+        },
+        "cvr_logloss_on_clicked": {
+          "values": [
+            0.30700988344431357,
+            0.30839993435366686,
+            0.3134191129914964
+          ],
+          "mean": 0.3096096435964923,
+          "sample_std": 0.003371513485996049
+        },
+        "predicted_ctcvr": {
+          "values": [
+            0.04798431621975646,
+            0.04990876581496511,
+            0.05280002416327166
+          ],
+          "mean": 0.05023103539933108,
+          "sample_std": 0.0024239748375477015
+        },
+        "predicted_ctr": {
+          "values": [
+            0.38428214904799163,
+            0.38841871672716877,
+            0.3992414222820809
+          ],
+          "mean": 0.39064742935241376,
+          "sample_std": 0.0077246575262260005
+        },
+        "predicted_cvr_on_clicked": {
+          "values": [
+            0.1307600612766744,
+            0.1359180028595823,
+            0.14021990979583443
+          ],
+          "mean": 0.1356326579773637,
+          "sample_std": 0.004736375172821497
+        },
+        "probability_order_violation_rate": {
+          "values": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "mean": 0.0,
+          "sample_std": 0.0
+        }
+      },
+      "elapsed_seconds": {
+        "values": [
+          62.991894499999034,
+          62.22730230000161,
+          62.495767300002626
+        ],
+        "mean": 62.57165470000109,
+        "sample_std": 0.38790395871029754
+      },
+      "trainable_parameters": 2668346,
+      "best_epochs": [
+        1,
+        1,
+        1
+      ],
+      "epochs_ran": [
+        3,
+        3,
+        3
+      ]
+    }
+  }
+}
