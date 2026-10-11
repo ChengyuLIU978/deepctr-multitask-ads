@@ -89,7 +89,7 @@ SharedBottom 相对 ESMM 的 CTR/CTCVR/clicked-CVR AUC 分别低 0.0041/0.0155/0
 | ESMM | 0.7535 | 0.6764 | 0.8521 | 0.8228 |
 | MMoE | 0.7517 | 0.6717 | 0.8524 | 0.8237 |
 
-完整特征显著改善 CTR 与 CTCVR 排序；clicked-CVR 的改善较小，因此不能写成“所有任务同幅度提升”。
+在本次单随机种子特征组消融中，完整特征的 CTR 与 CTCVR AUC 高于仅稀疏特征配置；clicked-CVR 的改善较小。未做统计显著性检验，因此不能写成“所有任务同幅度提升”或“统计显著提升”。
 
 完整负迁移分析、逐项控制变量与 Early Stopping 诊断见 [多任务负迁移研究](docs/NEGATIVE_TRANSFER_STUDY.md)。
 
